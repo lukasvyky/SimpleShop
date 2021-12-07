@@ -10,9 +10,19 @@ namespace Shop.Application.ProductsAdmin
             Context = context;
         }
 
-        public async Task Do(ProductViewModel vm) => await Context.SaveChangesAsync();
+        public async Task<Response> Do(Request request)
+        {
+            await Context.SaveChangesAsync();
+            return new Response();
+        }
 
-        public class ProductViewModel
+        public class Request
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public decimal Value { get; set; }
+        }
+        public class Response
         {
             public int Id { get; set; }
             public string Name { get; set; }

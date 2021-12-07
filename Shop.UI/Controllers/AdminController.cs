@@ -20,13 +20,13 @@ namespace Shop.UI.Controllers
         public IActionResult GetProduct(int id) => Ok(new GetProduct(Context).Do(id));
 
         [HttpPost("products")]
-        public IActionResult CreateProduct(CreateProduct.ProductViewModel vm) => Ok(new CreateProduct(Context).Do(vm));
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProduct.Request request) => Ok(await new CreateProduct(Context).Do(request));
 
         [HttpDelete("products/{id}")]
-        public IActionResult DeleteProduct(int id) => Ok(new DeleteProduct(Context).Do(id));
+        public async Task<IActionResult> DeleteProduct(int id) => Ok(await new DeleteProduct(Context).Do(id));
 
         [HttpPut("products")]
-        public IActionResult UpdateProduct(UpdateProduct.ProductViewModel vm) => Ok(new UpdateProduct(Context).Do(vm));
+        public async Task<IActionResult> UpdateProduct(UpdateProduct.Request request) => Ok(await new UpdateProduct(Context).Do(request));
 
     }
 }

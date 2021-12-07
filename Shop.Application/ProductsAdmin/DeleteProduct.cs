@@ -10,11 +10,13 @@ namespace Shop.Application.ProductsAdmin
             Context = context;
         }
 
-        public async Task Do(int id)
+        public async Task<bool> Do(int id)
         {
             var productToDelete = Context.Products.Find(id);
             Context.Products.Remove(productToDelete);
             await Context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
