@@ -3,7 +3,7 @@ using Shop.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
+builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
@@ -17,10 +17,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
 
-app.UseAuthorization();
 
-app.MapRazorPages();
+app.UseMvcWithDefaultRoute();
 
 app.Run();
