@@ -1,8 +1,11 @@
 ﻿var app = new Vue({
     el: '#app',
     data: {
+        editing: false,
+        objectIndex: 0,
         loading: false,
         productModel: {
+            id: 0,
             name: "Product Name",
             description: "Product Description",
             value: 1
@@ -11,7 +14,30 @@
     },
     computed: {
     },
+    mounted() {
+        this.getProducts();
+    },
     methods: {
+        getProduct(id) {
+            this.loading = true;
+            axios.get("/admin/products/" + id)
+                .then(res => {
+                    console.log(res);
+                    var product = res.data;
+                    this.productModel = {
+                        id: product.id,
+                        name: product.name,
+                        description: product.description,
+                        value: product.value
+                    };
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                .then(() => {
+                    this.loading = false;
+                });
+        },
         getProducts() {
             this.loading = true;
             axios.get("/admin/products")
@@ -28,6 +54,7 @@
         },
         createProduct() {
             this.loading = true;
+            this.editing = false;
             axios.post("/admin/products", this.productModel)
                 .then(res => {
                     console.log(res);
@@ -38,7 +65,48 @@
                 })
                 .then(() => {
                     this.loading = false;
+                });
+        },
+        editProduct(id, index) {
+            this.objectIndex = index;
+            this.getProduct(id);
+            this.editing = true;
+        },
+        updateProduct() {
+            this.loading = true;
+            this.editing = false;
+            axios.put("/admin/products", this.productModel)
+                .then(res => {
+                    console.log(res);
+                    this.products.splice(this.objectIndex, 1, res.data);
                 })
+                .catch(err => {
+                    console.log(err);
+                })
+                .then(() => {
+                    this.loading = false;
+                });
+        },
+        deleteProduct(id, index) {
+            this.loading = true;
+            axios.delete("/admin/products/" + id)
+                .then(res => {
+                    console.log(res);
+                    this.products.splice(index, 1);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                .then(() => {
+                    this.loading = false;
+                });
+        },
+        newProduct() {
+            this.editing = true;
+            this.productModel.id = 0;
+        },
+        cancel() {
+            this.editing = false;
         }
     }
 });
