@@ -14,9 +14,10 @@
         </div>
         <div class="column is-6" v-if="selectedProduct">
             <table class="table">
-                <tr v-for="stock in selectedProduct.stock">
+                <tr v-for="(stock, index) in selectedProduct.stock">
                     <td><input v-model="stock.description" /></td>
                     <td><input v-model="stock.qty" /></td>
+                    <td><a class="has-text-danger" @@click="deleteStock(stock.id, index)">Delete</a></td>
                 </tr>
             </table>
             <a class="button is-warning" @@click="updateStock">

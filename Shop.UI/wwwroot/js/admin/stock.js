@@ -44,6 +44,20 @@
                     this.loading = false;
                 });
         },
+        deleteStock(id, index) {
+            this.loading = true;
+            axios.delete("/admin/stocks/" + id)
+                .then(res => {
+                    console.log(res);
+                    this.selectedProduct.stock.splice(index, 1);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                .then(() => {
+                    this.loading = false;
+                });
+        },
         selectProduct(product) {
             this.selectedProduct = product;
             this.newStock.productId = product.id;
