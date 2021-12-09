@@ -14,7 +14,7 @@
             <div class="container">
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
                     </ul>
@@ -23,25 +23,30 @@
         </nav>
     </header>
 
-     <div class="columns">
-        <div class="column is-3">
-            <div class="menu">
-                <p class="menu-label">Admin Menu</p>
-                <ul class="menu-list">
-                    <li><a asp-page="/Admin/Index">Products</a></li>
-                    <li><a asp-page="/Admin/Orders">Orders</a></li>
-                    <li><a asp-page="/Admin/Stock">Stock</a></li>
-                </ul>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3">
+                <div class="menu">
+                    <p class="menu-label">Admin Menu</p>
+                    <ul class="menu-list">
+                        <li><a asp-page="/Admin/Index">Products</a></li>
+                        <li><a asp-page="/Admin/Orders">Orders</a></li>
+                        <li><a asp-page="/Admin/Stock">Stock</a></li>
+                    </ul>
+                    <ul class="menu-list">
+                        <li><a asp-page="/Index">Back to main</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="column is-9">
-            @RenderBody()
+            <div class="column is-9">
+                @RenderBody()
+            </div>
         </div>
     </div>
 
     <div class="container">
         <main role="main" class="pb-3">
-            
+
         </main>
     </div>
 
