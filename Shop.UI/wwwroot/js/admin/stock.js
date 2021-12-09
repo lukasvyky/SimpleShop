@@ -28,7 +28,25 @@
                 });
         },
         updateStock() {
-
+            this.loading = true;
+            axios.put("/admin/stocks", {
+                stock: this.selectedProduct.stock.map(s => {
+                    return {
+                        id: s.id,
+                        description: s.description,
+                        qty: s.qty,
+                        productId: this.selectedProduct.id
+                    };
+                })})
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                .then(() => {
+                    this.loading = false;
+                });
         },
         addStock() {
             this.loading = true;
