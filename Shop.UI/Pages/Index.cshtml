@@ -1,5 +1,18 @@
 ﻿@page
-@model AdminIndexModel
+@model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
+
+<div>
+
+    @{
+        foreach (var product in Model.Products)
+        {
+            <a asp-page="Product" asp-route-name="@product.Name.Replace(' ', '-')">
+                @product.Name -- @product.Description -- @product.Value
+            </a>
+            <br />
+        }
+    }
+</div>
