@@ -19,12 +19,12 @@ namespace Shop.Application.ProductsAdmin
             product.Value = request.Value;
 
             await Context.SaveChangesAsync();
-            return new Response 
+            return new Response
             {
-                Id=product.Id,
-                Name=product.Name,
-                Description=product.Description,
-                Value=product.Value
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Value = product.Value
             };
         }
 

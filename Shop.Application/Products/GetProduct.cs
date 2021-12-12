@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop.Application.Products
 {
@@ -27,7 +22,7 @@ namespace Shop.Application.Products
                     {
                         Name = p.Name,
                         Description = p.Description,
-                        Value = p.Value,
+                        Value = $"CZK {p.Value.ToString("N2")}",
                         Stock = p.Stock.Select(s => new StockViewModel()
                         {
                             Id = s.Id,
@@ -42,7 +37,7 @@ namespace Shop.Application.Products
         {
             public string Name { get; set; }
             public string Description { get; set; }
-            public decimal Value { get; set; }
+            public string Value { get; set; }
 
             public IEnumerable<StockViewModel> Stock { get; set; }
         }

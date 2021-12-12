@@ -1,0 +1,54 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Shop.Database;
+using Shop.Domain.Models;
+using System.Text;
+using System.Text.Json;
+
+namespace Shop.Application.Cart
+{
+    public class GetCart
+    {
+        private ISession Session { get; }
+        private ApplicationDbContext Context { get; }
+
+        public GetCart(ISession session, ApplicationDbContext ctx)
+        {
+            Session = session;
+            Context = ctx;
+        }
+
+        public Response Do()
+        {
+            var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
+
+            if (!hasCookieValue)
+            {
+                return new Response();
+            }
+
+            var cartProduct = JsonSerializer.Deserialize<CartProduct>(Encoding.ASCII.GetString(value));
+            var response = Context.Stocks
+                .Include(s => s.Product)
+                .Where(s => s.Id == cartProduct.StockId)
+                .Select(s => new Response()
+                {
+                    Name = s.Product.Name,
+                    Value = $"CZK {s.Product.Value:N2}",
+                    StockId = s.Id,
+                    Qty = cartProduct.Qty
+                })
+                .FirstOrDefault();
+            return response;
+        }
+
+
+        public class Response
+        {
+            public string Name { get; set; }
+            public string Value { get; set; }
+            public int StockId { get; set; }
+            public int Qty { get; set; }
+        }
+    }
+}
