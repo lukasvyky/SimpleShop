@@ -15,13 +15,28 @@ namespace Shop.Application.Cart
 
         public void Do(Request request)
         {
-            var cartProduct = new CartProduct()
-            {
-                StockId = request.StockId,
-                Qty = request.Qty
-            };
+            var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
+            var cartItems = new List<CartProduct>();
 
-            var stringObject = JsonSerializer.Serialize(cartProduct);
+            if (hasCookieValue)
+            {
+                cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value));
+            }
+
+            if (cartItems.Any(cp => cp.StockId == request.StockId))
+            {
+                cartItems.Find(cp => cp.StockId == request.StockId).Qty += request.Qty;
+            }
+            else
+            {
+                cartItems.Add(new CartProduct()
+                {
+                    StockId = request.StockId,
+                    Qty = request.Qty
+                });
+            }
+
+            var stringObject = JsonSerializer.Serialize(cartItems);
 
             Session.Set("cart", Encoding.UTF8.GetBytes(stringObject));
         }

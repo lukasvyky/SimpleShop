@@ -18,30 +18,31 @@ namespace Shop.Application.Cart
             Context = ctx;
         }
 
-        public Response Do()
+        public IEnumerable<Response> Do()
         {
             var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
 
             if (!hasCookieValue)
             {
-                return new Response();
+                return new List<Response>();
             }
 
-            var cartProduct = JsonSerializer.Deserialize<CartProduct>(Encoding.ASCII.GetString(value));
+            var cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value));
             var response = Context.Stocks
                 .Include(s => s.Product)
-                .Where(s => s.Id == cartProduct.StockId)
+                .AsEnumerable()
+                .Where(s => cartItems.Any(cp => cp.StockId == s.Id))
                 .Select(s => new Response()
                 {
                     Name = s.Product.Name,
                     Value = $"CZK {s.Product.Value:N2}",
                     StockId = s.Id,
-                    Qty = cartProduct.Qty
+                    Qty = cartItems.FirstOrDefault(cp => cp.StockId == s.Id).Qty
                 })
-                .FirstOrDefault();
+                .ToList();
+                
             return response;
         }
-
 
         public class Response
         {
