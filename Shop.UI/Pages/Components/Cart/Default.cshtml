@@ -1,19 +1,13 @@
-﻿@page
-@model Shop.UI.Pages.CartModel
-@{
-}
+﻿@model IEnumerable<Shop.Application.Cart.GetCart.Response>
 
 <div>
-
-    @foreach (var product in Model.CartItems)
+    <h2>Cart component</h2>
+    @foreach (var product in Model)
     {
         <p>@product.Name</p>
         <p>@product.Value</p>
         <p>@product.Qty</p>
         <p>@product.StockId</p>
-
         <hr />
     }
 </div>
-
-<vc:cart view="Small"></vc:cart>
