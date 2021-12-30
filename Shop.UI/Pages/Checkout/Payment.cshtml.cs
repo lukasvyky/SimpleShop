@@ -30,7 +30,7 @@ namespace Shop.UI.Pages.Checkout
                 return RedirectToPage("CustomerInformation");
             }
 
-            var cartOrder = new GetOrder(HttpContext.Session, Context).Do();
+            var cartOrder = new Shop.Application.Cart.GetOrder(HttpContext.Session, Context).Do();
 
             StripeConfiguration.ApiKey = Config.GetSection("Stripe")["SecretKey"];
 

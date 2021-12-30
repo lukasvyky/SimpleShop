@@ -1,7 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Cart;
 using Shop.Application.Orders;
 using Shop.Database;
 using Stripe;
@@ -21,7 +20,7 @@ namespace Shop.UI.Pages.Checkout
         public async Task OnGet([FromQuery(Name = "payment_intent")] string paymentIntentId)
         {
             StripeConfiguration.ApiKey = Config.GetSection("Stripe")["SecretKey"];
-            var cartOrder = new GetOrder(HttpContext.Session, Context).Do();
+            var cartOrder = new Shop.Application.Cart.GetOrder(HttpContext.Session, Context).Do();
 
             var paymentIntent = await new PaymentIntentService().GetAsync(paymentIntentId);
 

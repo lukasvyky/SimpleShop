@@ -19,6 +19,13 @@ namespace Shop.Application.Orders
 
         public async Task<bool> Do(Request request)
         {
+            var stocksToUpdate = Context.Stocks.AsEnumerable().Where(s => request.Stocks.Any(rs => rs.StockId == s.Id)).ToList();
+
+            foreach (var stock in stocksToUpdate)
+            {
+                stock.Qty -= request.Stocks.FirstOrDefault(s => s.StockId == stock.Id).Qty;
+            }
+
             var order = new Order
             {
                 StripeReference = request.StripeReference,
