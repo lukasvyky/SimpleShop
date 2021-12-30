@@ -16,7 +16,7 @@ namespace Shop.Application.ProductsAdmin
             var newProduct = new Product
             {
                 Value = request.Value,
-                Name = request.Description,
+                Name = request.Name,
                 Description = request.Description
             };
 

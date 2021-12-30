@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
 builder.Services.AddSession(options =>
 {
@@ -18,7 +21,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
