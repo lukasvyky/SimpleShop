@@ -5,7 +5,6 @@ namespace Shop.Application.Products
 {
     public class GetProduct
     {
-
         private ApplicationDbContext Context { get; }
         public GetProduct(ApplicationDbContext context)
         {

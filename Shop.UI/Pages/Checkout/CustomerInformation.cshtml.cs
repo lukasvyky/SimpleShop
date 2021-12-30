@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shop.Application.Cart;
-using Shop.Database;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Shop.UI.Pages.Checkout
 {
@@ -9,6 +9,12 @@ namespace Shop.UI.Pages.Checkout
     {
         [BindProperty]
         public AddCustomerInformation.Request CustomerInformation { get; set; }
+        private IHostingEnvironment Env { get; set; }
+
+        public CustomerInformationModel(IHostingEnvironment env)
+        {
+            Env = env;
+        }
 
         public IActionResult OnGet()
         {
@@ -16,6 +22,21 @@ namespace Shop.UI.Pages.Checkout
 
             if (customerIntel is null)
             {
+                if (Env.IsDevelopment())
+                {
+                    CustomerInformation = new AddCustomerInformation.Request()
+                    {
+                        FirstName = "a",
+                        LastName = "a",
+                        Email = "a.b@seznam.cz",
+                        PhoneNumber = "123456789",
+                        Address = "a",
+                        Address2 = "a",
+                        City = "Praha",
+                        PostCode = "a"
+                    };
+                }
+
                 return Page();
             }
             else

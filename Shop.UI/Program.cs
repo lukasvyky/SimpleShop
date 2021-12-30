@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shop.Application.Orders;
 using Shop.Database;
 using Stripe;
 

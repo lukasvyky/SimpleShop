@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Shop.Application.Cart;
+using Shop.Application.Orders;
 using Shop.Database;
 using Stripe;
 
@@ -19,7 +21,7 @@ namespace Shop.UI.Pages.Checkout
             Config = config;
             this.Context = Context;
         }
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
             var customerIntel = new GetCustomerInformation(HttpContext.Session).Do();
 
@@ -45,14 +47,6 @@ namespace Shop.UI.Pages.Checkout
                 }
             });
             ClientSecret = paymentIntent.ClientSecret;
-
-            return Page();
-        }
-
-        public IActionResult OnPost()
-        {
-            StripeConfiguration.ApiKey = Config.GetSection("Stripe")["PublicKey"];
-
 
             return Page();
         }

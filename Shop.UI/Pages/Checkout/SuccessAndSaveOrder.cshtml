@@ -1,0 +1,13 @@
+﻿@page "/checkout/success"
+@model Shop.UI.Pages.Checkout.SuccessAndSaveOrderModel
+@{
+}
+
+<h1>Success!!</h1>
+<p>You will now be redirected to main page.</p>
+
+<script>
+    setTimeout(function(){
+        window.location.href = 'https://localhost:7005/index';
+    }, 3000);
+</script>

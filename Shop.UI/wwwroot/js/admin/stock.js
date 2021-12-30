@@ -6,7 +6,7 @@
         newStock: {
             productId: 0,
             description: "Size",
-            Qty: 10
+            qty: 10
         }
     },
     mounted() {
