@@ -15,7 +15,7 @@
     methods: {
         getStocks() {
             this.loading = true;
-            axios.get("/admin/stocks")
+            axios.get("/stocks")
                 .then(res => {
                     console.log(res);
                     this.products = res.data;
@@ -29,7 +29,7 @@
         },
         updateStock() {
             this.loading = true;
-            axios.put("/admin/stocks", {
+            axios.put("/stocks", {
                 stock: this.selectedProduct.stock.map(s => {
                     return {
                         id: s.id,
@@ -50,7 +50,7 @@
         },
         addStock() {
             this.loading = true;
-            axios.post("/admin/stocks", this.newStock)
+            axios.post("/stocks", this.newStock)
                 .then(res => {
                     console.log(res);
                     this.selectedProduct.stock.push(res.data);
@@ -64,7 +64,7 @@
         },
         deleteStock(id, index) {
             this.loading = true;
-            axios.delete("/admin/stocks/" + id)
+            axios.delete("/stocks/" + id)
                 .then(res => {
                     console.log(res);
                     this.selectedProduct.stock.splice(index, 1);

@@ -18,11 +18,11 @@ namespace Shop.Application.Products
 
             if (stocksOnHold.Any())
             {
-                var stockToReturn = Context.Stocks.Where(s => stocksOnHold.Any(sh => sh.StockId == s.Id));
+                var stockToReturn = Context.Stocks.AsEnumerable().Where(s => stocksOnHold.Any(sh => sh.StockId == s.Id));
 
                 foreach (var stock in stockToReturn)
                 {
-                    stock.Qty += stocksOnHold.FirstOrDefault(sh => sh.StockId == stock.Id).Qty;
+                    stock.Qty += stocksOnHold.FirstOrDefault(s => s.StockId == stock.Id).Qty;
                 }
 
                 Context.StockOnHold.RemoveRange(stocksOnHold);

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IAuthorizationService authService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,12 +28,19 @@
         <div class="columns">
             <div class="column is-3">
                 <div class="menu">
-                    <p class="menu-label">Admin Menu</p>
+                    <p class="menu-label">Store Menu</p>
                     <ul class="menu-list">
                         <li><a asp-page="/Admin/Index">Products</a></li>
                         <li><a asp-page="/Admin/Orders">Orders</a></li>
                         <li><a asp-page="/Admin/Stock">Stock</a></li>
                     </ul>
+                    @if ((await authService.AuthorizeAsync(User, "Admin")).Succeeded)
+                    {
+                        <p class="menu-label">Admin Menu</p>
+                        <ul class="menu-list">
+                            <li><a asp-page="/Admin/ConfigureUsers">Configure users</a></li>
+                        </ul>
+                    }
                     <ul class="menu-list">
                         <li><a asp-page="/Index">Back to main</a></li>
                     </ul>
@@ -41,10 +50,10 @@
                 @RenderBody()
             </div>
         </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        @await RenderSectionAsync("Scripts", required: false)
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

@@ -24,9 +24,10 @@ namespace Shop.UI.Pages.Checkout
 
             var paymentIntent = await new PaymentIntentService().GetAsync(paymentIntentId);
 
-            await new CreateOrder(Context).Do(new CreateOrder.Request()
+            await new CreateOrder(Context).Do(new CreateOrder.Request
             {
                 StripeReference = paymentIntent.Charges.FirstOrDefault()?.Id,
+                SessionId = HttpContext.Session.Id,
 
                 FirstName = cartOrder.CustomerInformation.FirstName,
                 LastName = cartOrder.CustomerInformation.LastName,

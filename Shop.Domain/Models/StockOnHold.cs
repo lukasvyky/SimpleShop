@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
 
+        public string SessionId { get; set; }
+
         public int StockId { get; set; }
         public Stock Stock { get; set; }
 

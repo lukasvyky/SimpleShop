@@ -29,12 +29,14 @@ namespace Shop.Application.Cart
             Context.StockOnHold.Add(new StockOnHold()
             {
                 StockId = stockToHold.Id,
+                SessionId = Session.Id,
                 Qty = request.Qty,
                 ExpiryDate = DateTime.Now.AddMinutes(20)
             });
 
             stockToHold.Qty -= request.Qty;
 
+            Context.StockOnHold.Where(s=> s.SessionId == Session.Id).ToList().ForEach(s => s.ExpiryDate = DateTime.Now.AddMinutes(20));
             await Context.SaveChangesAsync();
 
 
