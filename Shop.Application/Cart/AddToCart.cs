@@ -2,19 +2,42 @@
 using Shop.Domain.Models;
 using System.Text;
 using System.Text.Json;
+using Shop.Database;
 
 namespace Shop.Application.Cart
 {
     public class AddToCart
     {
         private ISession Session { get; }
-        public AddToCart(ISession session)
+        private ApplicationDbContext Context { get; }
+
+        public AddToCart(ISession session, ApplicationDbContext context)
         {
             Session = session;
+            Context = context;
         }
 
-        public void Do(Request request)
+        public async Task<bool> Do(Request request)
         {
+            var stockToHold = Context.Stocks.Where(s => s.Id == request.StockId).FirstOrDefault();
+
+            if (stockToHold.Qty < request.Qty)
+            {
+                return false;
+            }
+
+            Context.StockOnHold.Add(new StockOnHold()
+            {
+                StockId = stockToHold.Id,
+                Qty = request.Qty,
+                ExpiryDate = DateTime.Now.AddMinutes(20)
+            });
+
+            stockToHold.Qty -= request.Qty;
+
+            await Context.SaveChangesAsync();
+
+
             var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
             var cartItems = new List<CartProduct>();
 
@@ -39,6 +62,8 @@ namespace Shop.Application.Cart
             var stringObject = JsonSerializer.Serialize(cartItems);
 
             Session.Set("cart", Encoding.UTF8.GetBytes(stringObject));
+
+            return true;
         }
 
         public class Request

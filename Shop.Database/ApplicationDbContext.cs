@@ -9,7 +9,8 @@ namespace Shop.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Stock> Stocks { get; set; }
-        public DbSet<OrderStock> OrderStocks{ get; set; }
+        public DbSet<OrderStock> OrderStocks { get; set; }
+        public DbSet<StockOnHold> StockOnHold { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

@@ -16,10 +16,10 @@ namespace Shop.UI.Pages.Checkout
         private ApplicationDbContext Context { get; }
         public string ClientSecret { get; set; }
 
-        public PaymentModel(IConfiguration config, ApplicationDbContext Context)
+        public PaymentModel(IConfiguration config, ApplicationDbContext context)
         {
             Config = config;
-            this.Context = Context;
+            Context = Context;
         }
         public async Task<IActionResult> OnGet()
         {
@@ -36,7 +36,7 @@ namespace Shop.UI.Pages.Checkout
 
             var paymentIntentService = new PaymentIntentService();
 
-            var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
+            var paymentIntent = await paymentIntentService.CreateAsync(new PaymentIntentCreateOptions
             {
                 Description = "My cool Purchase",
                 Amount = cartOrder.GetTotalCharge(),

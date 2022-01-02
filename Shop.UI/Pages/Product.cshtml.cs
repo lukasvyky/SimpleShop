@@ -19,9 +19,9 @@ namespace Shop.UI.Pages
         [BindProperty]
         public AddToCart.Request CartViewModel { get; set; }
 
-        public IActionResult OnGet(string name)
+        public async Task<IActionResult> OnGet(string name)
         {
-            var incomingProduct = new GetProduct(Context).Do(name.Replace('-', ' '));
+            var incomingProduct = await new GetProduct(Context).Do(name.Replace('-', ' '));
             if (incomingProduct is null)
             {
                 return RedirectToPage("Index");
@@ -33,9 +33,15 @@ namespace Shop.UI.Pages
             }
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
-            new AddToCart(HttpContext.Session).Do(CartViewModel);
+            var wasStockAdded = await new AddToCart(HttpContext.Session, Context).Do(CartViewModel);
+
+            if (!wasStockAdded)
+            {
+                //TODO: add a warning
+                return Page();
+            }
 
             return RedirectToPage("Cart");
         }

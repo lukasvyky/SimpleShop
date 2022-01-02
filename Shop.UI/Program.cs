@@ -10,7 +10,7 @@ StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretK
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "Cart";
-    options.Cookie.MaxAge = TimeSpan.FromDays(365);
+    options.Cookie.MaxAge = TimeSpan.FromMinutes(20);
 });
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

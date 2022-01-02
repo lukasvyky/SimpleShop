@@ -11,8 +11,24 @@ namespace Shop.Application.Products
             Context = context;
         }
 
-        public ProductViewModel Do(string productName)
+        public async Task<ProductViewModel> Do(string productName)
         {
+
+            var stocksOnHold = Context.StockOnHold.Where(s => s.ExpiryDate < DateTime.Now).ToList();
+
+            if (stocksOnHold.Any())
+            {
+                var stockToReturn = Context.Stocks.Where(s => stocksOnHold.Any(sh => sh.StockId == s.Id));
+
+                foreach (var stock in stockToReturn)
+                {
+                    stock.Qty += stocksOnHold.FirstOrDefault(sh => sh.StockId == stock.Id).Qty;
+                }
+
+                Context.StockOnHold.RemoveRange(stocksOnHold);
+                await Context.SaveChangesAsync();
+            }
+
             return Context.Products
                     .Include(p => p.Stock)
                     .Where(p => p.Name.Equals(productName))

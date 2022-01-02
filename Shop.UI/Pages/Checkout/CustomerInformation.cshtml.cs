@@ -9,9 +9,9 @@ namespace Shop.UI.Pages.Checkout
     {
         [BindProperty]
         public AddCustomerInformation.Request CustomerInformation { get; set; }
-        private IHostingEnvironment Env { get; set; }
+        private IWebHostEnvironment Env { get; set; }
 
-        public CustomerInformationModel(IHostingEnvironment env)
+        public CustomerInformationModel(IWebHostEnvironment env)
         {
             Env = env;
         }
