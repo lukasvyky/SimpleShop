@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shop.Application.Orders;
@@ -10,7 +9,7 @@ namespace Shop.UI.Pages.Checkout
     public class SuccessAndSaveOrderModel : PageModel
     {
         private ApplicationDbContext Context { get; }
-        private IConfiguration Config{ get; }
+        private IConfiguration Config { get; }
 
         public SuccessAndSaveOrderModel(ApplicationDbContext context, IConfiguration config)
         {

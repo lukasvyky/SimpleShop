@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 using Shop.Application.Cart;
-using Shop.Application.Orders;
 using Shop.Database;
 using Stripe;
 

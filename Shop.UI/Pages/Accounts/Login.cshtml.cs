@@ -7,7 +7,7 @@ namespace Shop.UI.Pages.Accounts
     public class LoginModel : PageModel
     {
         private SignInManager<IdentityUser> SignInManager { get; }
-         
+
         [BindProperty]
         public LoginViewModel Input { get; set; }
 

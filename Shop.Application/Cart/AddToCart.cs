@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Shop.Database;
 using Shop.Domain.Models;
 using System.Text;
 using System.Text.Json;
-using Shop.Database;
 
 namespace Shop.Application.Cart
 {
@@ -36,7 +36,7 @@ namespace Shop.Application.Cart
 
             stockToHold.Qty -= request.Qty;
 
-            Context.StockOnHold.Where(s=> s.SessionId == Session.Id).ToList().ForEach(s => s.ExpiryDate = DateTime.Now.AddMinutes(20));
+            Context.StockOnHold.Where(s => s.SessionId == Session.Id).ToList().ForEach(s => s.ExpiryDate = DateTime.Now.AddMinutes(20));
             await Context.SaveChangesAsync();
 
 

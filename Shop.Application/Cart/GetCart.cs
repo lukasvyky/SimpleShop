@@ -40,7 +40,7 @@ namespace Shop.Application.Cart
                     Qty = cartItems.FirstOrDefault(cp => cp.StockId == s.Id).Qty
                 })
                 .ToList();
-                
+
             return response;
         }
 

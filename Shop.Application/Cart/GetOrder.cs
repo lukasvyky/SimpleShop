@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shop.Database;
 using Shop.Domain.Models;
+using System.Text;
+using System.Text.Json;
 
 namespace Shop.Application.Cart
 {
@@ -40,7 +36,7 @@ namespace Shop.Application.Cart
                 .Select(s => new Product()
                 {
                     ProductId = s.Product.Id,
-                    Value = (int) (s.Product.Value * 100),
+                    Value = (int)(s.Product.Value * 100),
                     StockId = s.Id,
                     Qty = cartItems.FirstOrDefault(cp => cp.StockId == s.Id).Qty
                 })
@@ -58,7 +54,7 @@ namespace Shop.Application.Cart
 
         public class Response
         {
-            public IEnumerable<Product> Products{ get; set; }
+            public IEnumerable<Product> Products { get; set; }
             public CustomerInformation CustomerInformation { get; set; }
 
             public int GetTotalCharge() => Products.Sum(p => p.Value * p.Qty);
