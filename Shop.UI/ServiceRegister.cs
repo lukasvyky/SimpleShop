@@ -1,10 +1,12 @@
-﻿using Shop.Application.Admin.OrdersAdmin;
+﻿using Shop.Application;
+using Shop.Application.Admin.OrdersAdmin;
 using Shop.Application.Admin.ProductsAdmin;
 using Shop.Application.Admin.StockAdmin;
 using Shop.Application.Admin.UsersAdmin;
 using Shop.Application.User.Cart;
 using Shop.Application.User.Orders;
 using Shop.Application.User.Products;
+using Shop.UI;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,6 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection @this)
         {
+            @this.AddTransient<ISessionService, HttpContextGetter>();
+            @this.AddHttpContextAccessor();
+
             RegisterAdminServices(@this);
             RegisterUserServices(@this);
 

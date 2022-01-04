@@ -37,7 +37,7 @@ namespace Shop.Application.User.Products
                     {
                         Name = p.Name,
                         Description = p.Description,
-                        Value = $"CZK {p.Value.ToString("N2")}",
+                        Value = $"CZK{p.Value.ToString("N2")}",
                         Stock = p.Stock.Select(s => new StockViewModel()
                         {
                             Id = s.Id,
