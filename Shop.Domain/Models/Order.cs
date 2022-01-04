@@ -1,10 +1,13 @@
-﻿namespace Shop.Domain.Models
+﻿using Shop.Domain.Enums;
+
+namespace Shop.Domain.Models
 {
     public class Order
     {
         public int Id { get; set; }
         public string OrderRef { get; set; }
         public string StripeReference { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
 
         public string FirstName { get; set; }

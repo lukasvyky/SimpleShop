@@ -15,18 +15,15 @@ namespace Shop.UI.Pages.Accounts
         {
             SignInManager = signInManager;
         }
-        public void OnGet()
-        {
-        }
 
         public async Task<IActionResult> OnPost()
         {
             var signResult = await SignInManager.PasswordSignInAsync(Input.Username, Input.Password, false, false);
-            if (signResult.Succeeded)
+            if (!signResult.Succeeded)
             {
-                return RedirectToPage("/Admin/Index");
+                return Page();
             }
-            return Page();
+            return RedirectToPage("/Admin/Index");
         }
     }
 
