@@ -33,10 +33,7 @@ namespace Shop.UI.Pages.Checkout
                 Description = "My cool Purchase",
                 Amount = cartOrder.GetTotalCharge(),
                 Currency = "czk",
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
-                {
-                    Enabled = true,
-                }
+                PaymentMethodTypes = new List<string> {"card"}
             });
             ClientSecret = paymentIntent.ClientSecret;
 

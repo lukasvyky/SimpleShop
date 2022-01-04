@@ -2,31 +2,72 @@
 @model Shop.UI.Pages.ProductModel
 @{
 }
-<div>
-    @if (Model.Product is not null)
-    {
-    <p>@Model.Product.Name</p>
-    <p>@Model.Product.Description</p>
-    <p>@Model.Product.Value</p>
-    <div>
-        <form method="post">
-            <label>Stock</label>
-            <select asp-for="CartViewModel.StockId">
-                @foreach (var stock in Model.Product.Stock)
-                {
-                    <option value="@stock.Id">@stock.Description</option>
-                }
-            </select>
-            <label>Quantity</label>
-            <input asp-for="CartViewModel.Qty"/>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-    }
-    else
-    {
-        <p>Invalid stock</p>
-    }
-</div>
 
-@await Component.InvokeAsync("Cart")
+<div class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-6">
+                    <figure class="image is-4by3">
+                        <img alt="productPicture" src="~/images/dogsWeb.jpg" />
+                    </figure>
+                </div>
+                <div class="column is-6">
+                    <section class="content">
+                        <p class="title">@Model.Product.Name</p>
+                        <p class="subtitle">@Model.Product.Description</p>
+                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas ipsum velit, consectetuer eu lobortis ut, dictum at dui. Morbi imperdiet, mauris ac auctor dictum, nisl ligula egestas nulla, et sollicitudin sem purus in lacus. Fusce nibh. Vivamus luctus egestas leo. Nullam sit amet magna in magna gravida vehicula. Nunc auctor. Donec iaculis gravida nulla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec vitae arcu. In dapibus augue non sapien. Curabitur sagittis hendrerit ante. In enim a arcu imperdiet malesuada. Integer vulputate sem a nibh rutrum consequat. Suspendisse nisl. Integer tempor. Mauris tincidunt sem sed arcu. </p>
+                        <footer>
+                            <form method="post">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Stock</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select asp-for="CartViewModel.StockId">
+                                                        @foreach (var stock in Model.Product.Stock)
+                                                        {
+                                                            <option value="@stock.Id">@stock.Description</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Qty</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <input class="input" asp-for="CartViewModel.Qty" value="1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <button class="button is-success" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <span><strong>@Model.Product.Value</strong></span>
+                        </footer>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

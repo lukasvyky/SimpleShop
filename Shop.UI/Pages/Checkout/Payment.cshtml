@@ -3,15 +3,27 @@
 @{
 }
 
-<form id="payment-form" data-secret="@Model.ClientSecret">
-    <div id="payment-element">
+<div class="columns">
+    <div class="column is-6">
+        <p class="title">Payment</p>
+        <form id="payment-form" data-secret="@Model.ClientSecret">
+            <div class="field">
+                <div id="payment-element">
+                </div>
+            </div>
+            <div class="field has-text-right">
+                <button id="submit" class="button is-success">
+                    <div class="spinner hidden" id="spinner"></div>
+                    <span id="button-text">Pay now</span>
+                </button>
+            </div>
+            <div id="payment-message" class="hidden"></div>
+        </form>
     </div>
-    <button id="submit">
-        <div class="spinner hidden" id="spinner"></div>
-        <span id="button-text">Pay now</span>
-    </button>
-    <div id="payment-message" class="hidden"></div>
-</form>
+    <div class="column is-6">
+        <vc:cart></vc:cart>
+    </div>
+</div>
 
 @section scripts{
 <script src="https://js.stripe.com/v3/"></script>

@@ -36,6 +36,7 @@ namespace Shop.Application.User.Cart
                 {
                     Name = s.Product.Name,
                     Value = $"CZK {s.Product.Value:N2}",
+                    RealValue = s.Product.Value,
                     StockId = s.Id,
                     Qty = cartItems.FirstOrDefault(cp => cp.StockId == s.Id).Qty
                 })
@@ -48,6 +49,7 @@ namespace Shop.Application.User.Cart
         {
             public string Name { get; set; }
             public string Value { get; set; }
+            public decimal RealValue { get; set; }
             public int StockId { get; set; }
             public int Qty { get; set; }
         }

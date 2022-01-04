@@ -18,6 +18,7 @@ namespace Shop.Application.Admin.StockAdmin
                 .Select(p => new ProductViewModel
                 {
                     Id = p.Id,
+                    Name = p.Name,
                     Description = p.Description,
                     Stock = p.Stock.Select(x => new StockViewModel
                     {
@@ -41,6 +42,7 @@ namespace Shop.Application.Admin.StockAdmin
         public class ProductViewModel
         {
             public int Id { get; set; }
+            public string Name { get; set; }
             public string Description { get; set; }
             public IEnumerable<StockViewModel> Stock { get; set; }
         }

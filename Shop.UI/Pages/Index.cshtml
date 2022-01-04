@@ -1,36 +1,36 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+   
 }
 
 <section>
     <div class="columns is-multiline is-mobile">
         @{
-                foreach (var product in Model.Products)
-                {
-                    <div class="column is-3-desktop is-4-tablet is-5-mobile">
-                        <a asp-page="Product" asp-route-name="@product.Name.Replace(' ', '-')">
-                            <div class="card">
-                                <div class="card-image">
-                                    <figure class="image is-4by3">
-                                        <img src="images/dogsWeb.jpg" />
-                                    </figure>
-                                </div>
-                                <div class="card-content">
-                                    <p class="title is-size-5">
-                                        @product.Name - @product.Value
-                                    </p>
-                                    <p class="subtitle">
-                                        @product.Description
-                                    </p>
-                                    <div class="content">
-                                    </div>
+            foreach (var product in Model.Products)
+            {
+                <div class="column is-3-desktop is-4-tablet is-5-mobile">
+                    <a asp-page="Product" asp-route-name="@product.Name.Replace(' ', '-')">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="images/dogsWeb.jpg" />
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-size-5">
+                                    @product.Name - @product.Value
+                                </p>
+                                <p class="subtitle">
+                                    @product.Description
+                                </p>
+                                <div class="content">
                                 </div>
                             </div>
-                        </a>
-                    </div>
-                }
+                        </div>
+                    </a>
+                </div>
+            }
         }
     </div>
 </section>
