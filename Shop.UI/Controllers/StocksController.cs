@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Application.StockAdmin;
-using Shop.Database;
+using Shop.Application.Admin.StockAdmin;
 
 namespace Shop.UI.Controllers
 {
@@ -10,22 +9,20 @@ namespace Shop.UI.Controllers
     [Authorize(Policy = "Manager")]
     public class StocksController : ControllerBase
     {
-        private ApplicationDbContext Context { get; }
-        public StocksController(ApplicationDbContext context)
-        {
-            Context = context;
-        }
+        [HttpGet]
+        public IActionResult GetStocks([FromServices] GetStockAdmin getStock)
+            => Ok(getStock.Do());
 
-        [HttpGet("stocks")]
-        public IActionResult GetStocks() => Ok(new GetStock(Context).Do());
+        [HttpPost]
+        public async Task<IActionResult> CreateStock([FromServices] CreateStockAdmin createStock, [FromBody] CreateStockAdmin.Request request)
+            => Ok(await createStock.Do(request));
 
-        [HttpPost("stocks")]
-        public async Task<IActionResult> CreateStock([FromBody] CreateStock.Request request) => Ok(await new CreateStock(Context).Do(request));
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStock([FromServices] DeleteStockAdmin deleteStock, int id)
+            => Ok(await deleteStock.Do(id));
 
-        [HttpDelete("stocks/{id}")]
-        public async Task<IActionResult> DeleteStock(int id) => Ok(await new DeleteStock(Context).Do(id));
-
-        [HttpPut("stocks")]
-        public async Task<IActionResult> UpdateStock([FromBody] UpdateStock.Request request) => Ok(await new UpdateStock(Context).Do(request));
+        [HttpPut]
+        public async Task<IActionResult> UpdateStock([FromServices] UpdateStockAdmin updateStock, [FromBody] UpdateStockAdmin.Request request)
+            => Ok(await updateStock.Do(request));
     }
 }

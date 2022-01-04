@@ -1,27 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Cart;
-using Shop.Application.Products;
-using Shop.Database;
+using Shop.Application.User.Cart;
+using Shop.Application.User.Products;
 
 namespace Shop.UI.Pages
 {
     public class ProductModel : PageModel
     {
-        private ApplicationDbContext Context { get; }
         public GetProduct.ProductViewModel Product { get; set; }
-
-        public ProductModel(ApplicationDbContext context)
-        {
-            Context = context;
-        }
 
         [BindProperty]
         public AddToCart.Request CartViewModel { get; set; }
 
-        public async Task<IActionResult> OnGet(string name)
+        public async Task<IActionResult> OnGet([FromServices] GetProduct getProduct, string name)
         {
-            var incomingProduct = await new GetProduct(Context).Do(name.Replace('-', ' '));
+            var incomingProduct = await getProduct.Do(name.Replace('-', ' '));
             if (incomingProduct is null)
             {
                 return RedirectToPage("Index");
@@ -33,9 +26,9 @@ namespace Shop.UI.Pages
             }
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost([FromServices] AddToCart addToCart)
         {
-            var wasStockAdded = await new AddToCart(HttpContext.Session, Context).Do(CartViewModel);
+            var wasStockAdded = await addToCart.Do(CartViewModel);
 
             if (!wasStockAdded)
             {

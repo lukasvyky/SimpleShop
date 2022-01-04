@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Products;
+using Shop.Application.User.Products;
 using Shop.Database;
 
 namespace Shop.UI.Pages

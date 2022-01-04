@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Application.OrdersAdmin;
-using Shop.Database;
+using Shop.Application.Admin.OrdersAdmin;
 
 namespace Shop.UI.Controllers
 {
@@ -10,28 +9,16 @@ namespace Shop.UI.Controllers
     [Authorize(Policy = "Manager")]
     public class OrdersController : ControllerBase
     {
-        private ApplicationDbContext Context { get; }
-        public OrdersController(ApplicationDbContext context)
-        {
-            Context = context;
-        }
-
         [HttpGet("{id}")]
-        public IActionResult GetOrder(int id)
-        {
-            return Ok(new GetOrder(Context).Do(id));
-        }
+        public IActionResult GetOrder([FromServices] GetOrderAdmin getOrderAdmin, int id)
+            => Ok(getOrderAdmin.Do(id));
 
         [HttpGet]
-        public IActionResult GetOrders(int status)
-        {
-            return Ok(new GetOrders(Context).Do(status));
-        }
+        public IActionResult GetOrders([FromServices] GetOrdersAdmin getOrdersAdmin, int status)
+            => Ok(getOrdersAdmin.Do(status));
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id)
-        {
-            return Ok(await new UpdateOrder(Context).Do(id));
-        }
+        public async Task<IActionResult> UpdateOrder([FromServices] UpdateOrderAdmin updateOrderAdmin, int id)
+            => Ok(await updateOrderAdmin.Do(id));
     }
 }

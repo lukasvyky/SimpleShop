@@ -1,34 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Cart;
-using Shop.Database;
+using Shop.Application.User.Cart;
 using Stripe;
 
 namespace Shop.UI.Pages.Checkout
 {
     public class PaymentModel : PageModel
     {
-        private IConfiguration Config { get; }
-        private ApplicationDbContext Context { get; }
         public string ClientSecret { get; set; }
 
-        public PaymentModel(IConfiguration config, ApplicationDbContext context)
+        public async Task<IActionResult> OnGet(
+            [FromServices] GetCustomerInformation getCustomerInformation,
+            [FromServices] GetCartOrder getCartOrder,
+            [FromServices] IConfiguration config
+            )
         {
-            Config = config;
-            Context = Context;
-        }
-        public async Task<IActionResult> OnGet()
-        {
-            var customerIntel = new GetCustomerInformation(HttpContext.Session).Do();
+            var customerIntel = getCustomerInformation.Do();
 
             if (customerIntel is null)
             {
                 return RedirectToPage("CustomerInformation");
             }
 
-            var cartOrder = new Shop.Application.Cart.GetOrder(HttpContext.Session, Context).Do();
+            var cartOrder = getCartOrder.Do();
 
-            StripeConfiguration.ApiKey = Config.GetSection("Stripe")["SecretKey"];
+            StripeConfiguration.ApiKey = config.GetSection("Stripe")["SecretKey"];
 
             var paymentIntentService = new PaymentIntentService();
 

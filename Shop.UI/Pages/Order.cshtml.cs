@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Orders;
+using Shop.Application.User.Orders;
 using Shop.Database;
 
 namespace Shop.UI.Pages

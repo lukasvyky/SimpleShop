@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Application.UsersAdmin;
+using Shop.Application.Admin.UsersAdmin;
 
 namespace Shop.UI.Controllers
 {
@@ -8,15 +8,9 @@ namespace Shop.UI.Controllers
     [Authorize(Policy = "Admin")]
     public class UsersController : Controller
     {
-        public CreateUser CreateUserService { get; set; }
-        public UsersController(CreateUser createUser)
+        public async Task<IActionResult> CreateUser([FromServices] CreateUserAdmin createUser, [FromBody] CreateUserAdmin.Request request)
         {
-            CreateUserService = createUser;
-        }
-
-        public async Task<IActionResult> CreateUser([FromBody] CreateUser.Request request)
-        {
-            await CreateUserService.Do(request);
+            await createUser.Do(request);
 
             return Ok();
         }

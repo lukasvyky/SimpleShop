@@ -7,17 +7,10 @@ namespace Shop.UI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private SignInManager<IdentityUser> SignInManager { get; }
-
-        public AccountController(SignInManager<IdentityUser> signInManager)
-        {
-            SignInManager = signInManager;
-        }
-
         [HttpGet]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout([FromServices] SignInManager<IdentityUser> signInManager)
         {
-            await SignInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
 
             return RedirectToPage("/Index");
         }

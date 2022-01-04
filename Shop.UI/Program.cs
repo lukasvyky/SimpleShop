@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shop.Application.UsersAdmin;
+using Shop.Application;
 using Shop.Database;
+using Shop.UI;
 using Stripe;
 using System.Security.Claims;
 
@@ -22,7 +23,10 @@ builder.Services.AddMvc(options => options.EnableEndpointRouting = false)
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<CreateUser>();
+
+builder.Services.AddApplicationServices();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<ISessionService, HttpContextGetter>();
 
 SetupAuthenticationAndAuthor(builder);
 

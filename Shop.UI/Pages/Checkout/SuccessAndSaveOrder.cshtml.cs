@@ -1,29 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Orders;
-using Shop.Database;
+using Shop.Application.User.Cart;
+using Shop.Application.User.Orders;
 using Stripe;
 
 namespace Shop.UI.Pages.Checkout
 {
     public class SuccessAndSaveOrderModel : PageModel
     {
-        private ApplicationDbContext Context { get; }
-        private IConfiguration Config { get; }
-
-        public SuccessAndSaveOrderModel(ApplicationDbContext context, IConfiguration config)
+        public async Task OnGet(
+            [FromQuery(Name = "payment_intent")] string paymentIntentId,
+            [FromServices] GetCartOrder getCartOrder,
+            [FromServices] CreateOrder createOrder,
+            [FromServices] IConfiguration config
+            )
         {
-            Context = context;
-            Config = config;
-        }
-        public async Task OnGet([FromQuery(Name = "payment_intent")] string paymentIntentId)
-        {
-            StripeConfiguration.ApiKey = Config.GetSection("Stripe")["SecretKey"];
-            var cartOrder = new Shop.Application.Cart.GetOrder(HttpContext.Session, Context).Do();
+            StripeConfiguration.ApiKey = config.GetSection("Stripe")["SecretKey"];
+            var cartOrder = getCartOrder.Do();
 
             var paymentIntent = await new PaymentIntentService().GetAsync(paymentIntentId);
 
-            await new CreateOrder(Context).Do(new CreateOrder.Request
+            await createOrder.Do(new CreateOrder.Request
             {
                 StripeReference = paymentIntent.Charges.FirstOrDefault()?.Id,
                 SessionId = HttpContext.Session.Id,

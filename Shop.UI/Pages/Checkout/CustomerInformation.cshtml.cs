@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Cart;
+using Shop.Application.User.Cart;
 
 namespace Shop.UI.Pages.Checkout
 {
@@ -15,9 +15,9 @@ namespace Shop.UI.Pages.Checkout
             Env = env;
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet([FromServices] GetCustomerInformation getCustomerInformation)
         {
-            var customerIntel = new GetCustomerInformation(HttpContext.Session).Do();
+            var customerIntel = getCustomerInformation.Do();
 
             if (customerIntel is null)
             {
@@ -44,14 +44,14 @@ namespace Shop.UI.Pages.Checkout
             }
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost([FromServices] AddCustomerInformation addCustomerInformation)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            new AddCustomerInformation(HttpContext.Session).Do(CustomerInformation);
+            addCustomerInformation.Do(CustomerInformation);
 
             return RedirectToPage("Payment");
         }

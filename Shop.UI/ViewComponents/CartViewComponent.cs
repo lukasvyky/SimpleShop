@@ -1,21 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shop.Application.Cart;
-using Shop.Database;
+using Shop.Application.User.Cart;
 
 namespace Shop.UI.ViewComponents
 {
     public class CartViewComponent : ViewComponent
     {
-        private ApplicationDbContext Context { get; }
+        private GetCart GetCart { get; }
 
-        public CartViewComponent(ApplicationDbContext context)
+        public CartViewComponent(GetCart getCart)
         {
-            Context = context;
+            GetCart = getCart;
         }
-
         public IViewComponentResult Invoke(string view = "Default")
         {
-            return View(view, new GetCart(HttpContext.Session, Context).Do());
+
+            return View(view, GetCart.Do());
         }
     }
 }
