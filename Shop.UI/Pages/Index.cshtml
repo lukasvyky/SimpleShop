@@ -1,7 +1,8 @@
 ﻿@page
+@using System.Diagnostics.Eventing.Reader
 @model IndexModel
 @{
-   
+
 }
 
 <section>
@@ -24,7 +25,24 @@
                                 <p class="subtitle">
                                     @product.Description
                                 </p>
-                                <div class="content">
+                                @{
+                                    string cssClass = string.Empty;
+                                    string message = string.Empty;
+                                    if (product.StockCount == 0)
+                                    {
+                                        cssClass = "is-danger";
+                                        message = "Out of stock";
+
+                                    }
+                                    else if (product.StockCount <= 10)
+                                    {
+                                        cssClass = "is-warning";
+                                        message = "Low on Stock";
+                                    }
+                                }
+
+                                <div class="notification @cssClass is-paddingless has-text-centered">
+                                    @message
                                 </div>
                             </div>
                         </div>
