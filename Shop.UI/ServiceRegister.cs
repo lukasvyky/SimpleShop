@@ -30,6 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             @this.AddTransient<GetCart>();
             @this.AddTransient<GetCustomerInformation>();
             @this.AddTransient<GetCartOrder>();
+            @this.AddTransient<RemoveFromCart>();
 
             @this.AddTransient<CreateOrder>();
             @this.AddTransient<GetOrder>();

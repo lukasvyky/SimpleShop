@@ -19,6 +19,7 @@ namespace Shop.Application.User.Cart
 
         public async Task<bool> Do(Request request)
         {
+            var stocksOnHold = Context.StockOnHold.Where(s => s.SessionId == Session.Id).ToList();
             var stockToHold = Context.Stocks.Where(s => s.Id == request.StockId).FirstOrDefault();
 
             if (stockToHold.Qty < request.Qty)
@@ -26,13 +27,20 @@ namespace Shop.Application.User.Cart
                 return false;
             }
 
-            Context.StockOnHold.Add(new StockOnHold()
+            if (stocksOnHold.Any(s => s.StockId == request.StockId))
             {
-                StockId = stockToHold.Id,
-                SessionId = Session.Id,
-                Qty = request.Qty,
-                ExpiryDate = DateTime.Now.AddMinutes(20)
-            });
+                stocksOnHold.FirstOrDefault(s => s.StockId == request.StockId).Qty += request.Qty;
+            }
+            else
+            {
+                Context.StockOnHold.Add(new StockOnHold()
+                {
+                    StockId = stockToHold.Id,
+                    SessionId = Session.Id,
+                    Qty = request.Qty,
+                    ExpiryDate = DateTime.Now.AddMinutes(20)
+                });
+            }
 
             stockToHold.Qty -= request.Qty;
 
