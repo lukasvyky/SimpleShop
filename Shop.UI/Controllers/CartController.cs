@@ -26,9 +26,9 @@ namespace Shop.UI.Controllers
         }
 
         [HttpPost("{stockId:int}/{qty:int}")]
-        public async Task<IActionResult> RemoveOne([FromServices] RemoveFromCart removeFromCart, [FromRoute] int stockId, [FromRoute] int qty)
+        public async Task<IActionResult> Remove([FromServices] RemoveFromCart removeFromCart, [FromRoute] int stockId, [FromRoute] int qty)
         {
-            var success = await removeFromCart.Do(new RemoveFromCart.Request()
+            var success = await removeFromCart.Do(new RemoveFromCart.Request
             {
                 StockId = stockId,
                 Qty = qty
@@ -36,10 +36,10 @@ namespace Shop.UI.Controllers
 
             if (!success)
             {
-                return BadRequest("Failed to remove item from cart");
+                return BadRequest("Failed to remove items from cart");
             }
 
-            return Ok("Item removed from cart");
+            return Ok("Items removed from cart");
         }
 
         [HttpGet]

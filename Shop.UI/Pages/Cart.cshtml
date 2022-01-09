@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="columns">
-        <partial name="_CartPartial" model="@Model"/>
+        <partial name="_CartPartial" model="@Model.CartItems"/>
     </div>
 </div>
 
@@ -43,13 +43,13 @@
                 })
         }
         var updateCart = function () {
-            axios.get('/Cart/GetCartComponent')
+            axios.get('/Cart/GetCartSmallComponent')
                 .then(res => {
                     var html = res.data;
                     var el = document.getElementById('cart-nav');
                     el.outerHTML = html;
                 });
-            axios.get('/Cart/GetCartMain')
+            axios.get('/Cart/GetCartMainComponent')
                 .then(res => {
                     var html = res.data;
                     var el = document.getElementById('cart-main');

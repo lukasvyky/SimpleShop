@@ -48,7 +48,6 @@ namespace Shop.Database
             }
             Context.StockOnHold.Where(s => s.SessionId == sessionId).ToList().ForEach(s => s.ExpiryDate = DateTime.Now.AddMinutes(20));
 
-
             return Context.SaveChangesAsync();
         }
 

@@ -37,11 +37,7 @@ namespace Shop.UI.Infrastructure
             }
             else
             {
-                cartItems.Add(new CartProduct()
-                {
-                    StockId = cartProduct.StockId,
-                    Qty = cartProduct.Qty
-                });
+                cartItems.Add(cartProduct);
             }
 
             var stringObject = JsonSerializer.Serialize(cartItems);
