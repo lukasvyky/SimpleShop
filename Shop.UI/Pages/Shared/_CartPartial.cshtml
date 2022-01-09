@@ -1,0 +1,55 @@
+﻿@page
+@model Shop.UI.Pages.CartModel
+@{
+}
+
+<div class="column is-6 is-offset-3" id="cart-main">
+            @foreach (var product in Model.CartItems)
+            {
+                <div class="level" id="product-@product.StockId">
+                    <div class="level-item">
+                        <figure class="image is-128x128">
+                            <img src="~/images/dogsWeb.jpg" />
+                        </figure>
+                    </div>
+                    <div class="level-item">
+                        <p class="title">
+                            @product.Name
+                        </p>
+                    </div>
+                    <div class="level-item">
+                        <div class="columns is is-gapless is-mobile is-multiline has-text-centered">
+                            <div class="column is-4">
+                                <button class="button" type="button" 
+                                        onclick="removeOneFromCart(event)" 
+                                        data-stock-id="@product.StockId">
+                                    -
+                                </button>
+                            </div>
+                            <div class="column is-align-self-center is-4" id="stock-@product.StockId">
+                                @product.Qty
+                            </div>
+                            <div class="column is-4">
+                                <button class="button" type="button" 
+                                        onclick="addOneToCart(event)" 
+                                        data-stock-id="@product.StockId">
+                                    +
+                                </button>
+                            </div>
+                            <div class="column is-12">
+                                <a class="has-text-danger" 
+                                   onclick="removeAllFromCart(event)" 
+                                   data-stock-id="@product.StockId">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-item">
+                        <p>@product.Value</p>
+                    </div>
+                </div>
+            }
+            <div class="has-text-right">
+                <a class="button is-text" asp-page="/index">Resume shopping</a>
+                <a class="button is-success" asp-page="/checkout/customerInformation">Checkout</a>
+            </div>
+        </div>

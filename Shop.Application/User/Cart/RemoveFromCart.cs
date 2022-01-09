@@ -1,38 +1,25 @@
-﻿using Shop.Application.Infrastructure;
-using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.User.Cart
 {
     public class RemoveFromCart
     {
         private ISessionService SessionService { get; }
-        private ApplicationDbContext Context { get; }
+        private IStockService StockService { get; }
 
-        public RemoveFromCart(ISessionService sessionService, ApplicationDbContext context)
+        public RemoveFromCart(ISessionService sessionService, IStockService stockService)
         {
             SessionService = sessionService;
-            Context = context;
+            StockService = stockService;
         }
-
+       
         public async Task<bool> Do(Request request)
         {
-            var originalStock = Context.Stocks.Where(s => s.Id == request.StockId).FirstOrDefault();
-            var stockOnHold = Context.StockOnHold.FirstOrDefault(s => s.StockId == request.StockId && s.SessionId == SessionService.GetId());
-
-            if (request.RemoveAll || stockOnHold.Qty <= request.Qty)
+            if (request.Qty <= 0)
             {
-                originalStock.Qty += stockOnHold.Qty;
-                Context.StockOnHold.Remove(stockOnHold);
-                SessionService.RemoveProduct(request.StockId, request.Qty);
+                return false;
             }
-            else
-            {
-                originalStock.Qty += request.Qty;
-                stockOnHold.Qty -= request.Qty;
-                SessionService.RemoveProduct(request.StockId, request.Qty);
-            }
-
-            await Context.SaveChangesAsync();
+            await StockService.RemoveStockFromHold(request.StockId, request.StockId, SessionService.GetId());
 
             SessionService.RemoveProduct(request.StockId, request.Qty);
 

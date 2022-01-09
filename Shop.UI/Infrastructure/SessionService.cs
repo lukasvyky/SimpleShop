@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Shop.Application.Infrastructure;
+﻿using System;
+using Microsoft.AspNetCore.Http;
+using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -19,7 +21,7 @@ namespace Shop.UI.Infrastructure
 
         public string GetId() => Session.Id;
 
-        public void AddProduct(int stockId, int qty)
+        public void AddProduct(CartProduct cartProduct)
         {
             var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
             var cartItems = new List<CartProduct>();
@@ -29,16 +31,16 @@ namespace Shop.UI.Infrastructure
                 cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value));
             }
 
-            if (cartItems.Any(cp => cp.StockId == stockId))
+            if (cartItems.Any(cp => cp.StockId == cartProduct.StockId))
             {
-                cartItems.Find(cp => cp.StockId == stockId).Qty += qty;
+                cartItems.Find(cp => cp.StockId == cartProduct.StockId).Qty += cartProduct.Qty;
             }
             else
             {
                 cartItems.Add(new CartProduct()
                 {
-                    StockId = stockId,
-                    Qty = qty
+                    StockId = cartProduct.StockId,
+                    Qty = cartProduct.Qty
                 });
             }
 
@@ -69,18 +71,18 @@ namespace Shop.UI.Infrastructure
             Session.Set("cart", Encoding.UTF8.GetBytes(itemsToCart));
         }
 
-        public List<CartProduct> GetCart()
+        public IEnumerable<TResult> GetCart<TResult>(Func<CartProduct, TResult> selector)
         {
             var hasCookieValue = Session.TryGetValue("cart", out var value);
 
             if (!hasCookieValue)
             {
-                return null;
+                return new List<TResult>();
             }
 
-            var cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value));
+            var cartItems = JsonSerializer.Deserialize<IEnumerable<CartProduct>>(Encoding.ASCII.GetString(value));
 
-            return cartItems;
+            return cartItems.Select(selector);
         }
 
         public void AddCustomerInformation(CustomerInformation customer)

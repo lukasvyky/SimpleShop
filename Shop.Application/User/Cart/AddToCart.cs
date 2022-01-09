@@ -1,5 +1,4 @@
-﻿using Shop.Application.Infrastructure;
-using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 
 namespace Shop.Application.User.Cart
@@ -7,45 +6,36 @@ namespace Shop.Application.User.Cart
     public class AddToCart
     {
         private ISessionService SessionService { get; }
-        private ApplicationDbContext Context { get; }
+        private IStockService StockService { get; }
 
-        public AddToCart(ISessionService sessionService, ApplicationDbContext context)
+        public AddToCart(ISessionService sessionService, IStockService stockService)
         {
             SessionService = sessionService;
-            Context = context;
+            StockService = stockService;
         }
 
         public async Task<bool> Do(Request request)
         {
-            var stocksOnHold = Context.StockOnHold.Where(s => s.SessionId == SessionService.GetId()).ToList();
-            var stockToHold = Context.Stocks.Where(s => s.Id == request.StockId).FirstOrDefault();
-
-            if (stockToHold.Qty < request.Qty)
+            if (StockService.IsThereEnoughStock(request.StockId, request.Qty))
             {
                 return false;
             }
 
-            if (stocksOnHold.Any(s => s.StockId == request.StockId))
+            await StockService.PutStockOnHold(request.StockId, request.Qty, SessionService.GetId());
+
+            var stock = StockService.GetStockWithProduct(request.StockId);
+
+            var cartProduct = new CartProduct()
             {
-                stocksOnHold.FirstOrDefault(s => s.StockId == request.StockId).Qty += request.Qty;
-            }
-            else
-            {
-                Context.StockOnHold.Add(new StockOnHold()
-                {
-                    StockId = stockToHold.Id,
-                    SessionId = SessionService.GetId(),
-                    Qty = request.Qty,
-                    ExpiryDate = DateTime.Now.AddMinutes(20)
-                });
-            }
+                ProductId = stock.Product.Id,
+                ProductName = stock.Product.Name,
+                StockId = stock.Id,
+                Qty = request.Qty,
+                Value = stock.Product.Value
 
-            stockToHold.Qty -= request.Qty;
+            };
 
-            Context.StockOnHold.Where(s => s.SessionId == SessionService.GetId()).ToList().ForEach(s => s.ExpiryDate = DateTime.Now.AddMinutes(20));
-            await Context.SaveChangesAsync();
-
-            SessionService.AddProduct(request.StockId, request.Qty);
+            SessionService.AddProduct(cartProduct);
 
             return true;
         }
