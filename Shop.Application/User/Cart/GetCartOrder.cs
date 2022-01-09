@@ -1,33 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Shop.Application.Infrastructure;
 using Shop.Database;
 using Shop.Domain.Models;
-using System.Text;
-using System.Text.Json;
 
 namespace Shop.Application.User.Cart
 {
     public class GetCartOrder
     {
-        private ISession Session { get; }
+        private ISessionService SessionService { get; }
         private ApplicationDbContext Context { get; }
 
         public GetCartOrder(ISessionService sessionService, ApplicationDbContext ctx)
         {
-            Session = sessionService.GetSession();
+            SessionService = sessionService;
             Context = ctx;
         }
 
         public Response Do()
         {
-            var hasCartValue = Session.TryGetValue("cart", out byte[] cartValue);
-
-            if (!hasCartValue)
-            {
-                return new Response();
-            }
-
-            var cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(cartValue));
+            var cartItems = SessionService.GetCart();
 
             var products = Context.Stocks
                 .Include(s => s.Product)
@@ -42,13 +33,12 @@ namespace Shop.Application.User.Cart
                 })
                 .ToList();
 
-            var hasCustomerValue = Session.TryGetValue("customer-information", out byte[] customerValue);
-            var customerIntel = hasCustomerValue ? JsonSerializer.Deserialize<CustomerInformation>(Encoding.ASCII.GetString(customerValue)) : null;
+            var customerInformation = SessionService.GetCustomerInformation();
 
-            return new Response()
+            return customerInformation is null ? null : new Response
             {
                 Products = products,
-                CustomerInformation = customerIntel
+                CustomerInformation = customerInformation
             };
         }
 

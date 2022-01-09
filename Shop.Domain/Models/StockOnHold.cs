@@ -1,4 +1,6 @@
-﻿namespace Shop.Domain.Models
+﻿using System;
+
+namespace Shop.Domain.Models
 {
     public class StockOnHold
     {

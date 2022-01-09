@@ -1,61 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Shop.Application.Infrastructure;
 using Shop.Database;
-using Shop.Domain.Models;
 
 namespace Shop.Application.User.Cart
 {
     public class RemoveFromCart
     {
-        private ISession Session { get; }
+        private ISessionService SessionService { get; }
         private ApplicationDbContext Context { get; }
 
         public RemoveFromCart(ISessionService sessionService, ApplicationDbContext context)
         {
-            Session = sessionService.GetSession();
+            SessionService = sessionService;
             Context = context;
         }
 
         public async Task<bool> Do(Request request)
         {
             var originalStock = Context.Stocks.Where(s => s.Id == request.StockId).FirstOrDefault();
-            var stockOnHold = Context.StockOnHold.FirstOrDefault(s => s.StockId == request.StockId && s.SessionId == Session.Id);
+            var stockOnHold = Context.StockOnHold.FirstOrDefault(s => s.StockId == request.StockId && s.SessionId == SessionService.GetId());
 
             if (request.RemoveAll || stockOnHold.Qty <= request.Qty)
             {
                 originalStock.Qty += stockOnHold.Qty;
                 Context.StockOnHold.Remove(stockOnHold);
+                SessionService.RemoveProduct(request.StockId, request.Qty);
             }
             else
             {
                 originalStock.Qty += request.Qty;
                 stockOnHold.Qty -= request.Qty;
+                SessionService.RemoveProduct(request.StockId, request.Qty);
             }
 
             await Context.SaveChangesAsync();
 
-            var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
-            var cartItems = new List<CartProduct>();
-
-            if (hasCookieValue)
-            {
-                cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value));
-            }
-
-            if (cartItems.Any(cp => cp.StockId == request.StockId))
-            {
-                cartItems.Find(cp => cp.StockId == request.StockId).Qty -= request.Qty;
-            }
-
-            var stringObject = JsonSerializer.Serialize(cartItems);
-
-            Session.Set("cart", Encoding.UTF8.GetBytes(stringObject));
+            SessionService.RemoveProduct(request.StockId, request.Qty);
 
             return true;
         }

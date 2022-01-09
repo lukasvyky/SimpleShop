@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using Shop.Application.User.Cart;
 using Shop.Application.User.Orders;
 using Stripe;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shop.UI.Pages.Checkout
 {

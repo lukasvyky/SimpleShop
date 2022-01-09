@@ -1,7 +1,13 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Shop.Database;
 using Stripe;
+using System;
+using System.Linq;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +30,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddApplicationServices();
 
 SetupAuthenticationAndAuthor(builder);
-
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using Shop.Domain.Enums;
+using System.Collections.Generic;
 
 namespace Shop.Domain.Models
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Application.User.Cart;
+using System.Linq;
 
 namespace Shop.UI.ViewComponents
 {

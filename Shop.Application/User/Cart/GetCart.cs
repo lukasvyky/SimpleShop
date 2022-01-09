@@ -1,34 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Shop.Application.Infrastructure;
 using Shop.Database;
-using Shop.Domain.Models;
-using System.Text;
-using System.Text.Json;
 
 namespace Shop.Application.User.Cart
 {
     public class GetCart
     {
-        private ISession Session { get; }
+        private ISessionService SessionService { get; }
         private ApplicationDbContext Context { get; }
 
         public GetCart(ISessionService sessionService, ApplicationDbContext ctx)
         {
-            Session = sessionService.GetSession();
+            SessionService = sessionService;
             Context = ctx;
         }
 
         public IEnumerable<Response> Do()
         {
-            var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
+            var cartItems = SessionService.GetCart();
 
-            if (!hasCookieValue)
-            {
-                return new List<Response>();
-            }
-
-            var cartItems = JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value));
-            var response = Context.Stocks
+            return cartItems is null ? new List<Response>() : Context.Stocks
                 .Include(s => s.Product)
                 .AsEnumerable()
                 .Where(s => cartItems.Any(cp => cp.StockId == s.Id))
@@ -41,8 +32,6 @@ namespace Shop.Application.User.Cart
                     Qty = cartItems.FirstOrDefault(cp => cp.StockId == s.Id).Qty
                 })
                 .ToList();
-
-            return response;
         }
 
         public class Response

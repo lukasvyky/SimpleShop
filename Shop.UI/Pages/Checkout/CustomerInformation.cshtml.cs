@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 using Shop.Application.User.Cart;
 
 namespace Shop.UI.Pages.Checkout
@@ -38,10 +40,8 @@ namespace Shop.UI.Pages.Checkout
 
                 return Page();
             }
-            else
-            {
-                return RedirectToPage("Payment");
-            }
+
+            return RedirectToPage("Payment");
         }
 
         public IActionResult OnPost([FromServices] AddCustomerInformation addCustomerInformation)

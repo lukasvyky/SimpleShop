@@ -1,4 +1,6 @@
-﻿namespace Shop.Domain.Models
+﻿using System.Collections.Generic;
+
+namespace Shop.Domain.Models
 {
     public class Product
     {

@@ -1,22 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Shop.Application.Infrastructure;
 using Shop.Domain.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Json;
 
 namespace Shop.Application.User.Cart
 {
     public class AddCustomerInformation
     {
-        private ISession Session { get; }
+        private ISessionService SessionService { get; }
         public AddCustomerInformation(ISessionService sessionService)
         {
-            Session = sessionService.GetSession();
+            SessionService = sessionService;
         }
 
         public void Do(Request request)
         {
-            var customerInformation = new CustomerInformation()
+            SessionService.AddCustomerInformation(new CustomerInformation()
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -26,11 +24,7 @@ namespace Shop.Application.User.Cart
                 Address2 = request.Address2,
                 City = request.City,
                 PostCode = request.PostCode
-            };
-
-            var customerAsText = JsonSerializer.Serialize(customerInformation);
-
-            Session.Set("customer-information", Encoding.UTF8.GetBytes(customerAsText));
+            });
         }
 
         public class Request

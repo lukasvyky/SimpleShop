@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shop.Application.User.Products;
 using Shop.Database;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Shop.UI.Pages
 {

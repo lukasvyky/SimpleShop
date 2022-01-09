@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using Shop.Application.User.Cart;
 using Stripe;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Shop.UI.Pages.Checkout
 {
@@ -33,7 +36,7 @@ namespace Shop.UI.Pages.Checkout
                 Description = "My cool Purchase",
                 Amount = cartOrder.GetTotalCharge(),
                 Currency = "czk",
-                PaymentMethodTypes = new List<string> {"card"}
+                PaymentMethodTypes = new List<string> { "card" }
             });
             ClientSecret = paymentIntent.ClientSecret;
 

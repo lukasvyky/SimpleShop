@@ -1,38 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
-using Shop.Domain.Models;
-using System.Text;
-using System.Text.Json;
+﻿using Shop.Application.Infrastructure;
 
 namespace Shop.Application.User.Cart
 {
     public class GetCustomerInformation
     {
-        private ISession Session { get; }
+        private ISessionService SessionService { get; }
         public GetCustomerInformation(ISessionService sessionService)
         {
-            Session = sessionService.GetSession();
+            SessionService = sessionService;
         }
 
         public Response Do()
         {
-            var hasCookieValue = Session.TryGetValue("customer-information", out byte[] value);
-            var customerIntel = hasCookieValue ? JsonSerializer.Deserialize<CustomerInformation>(Encoding.ASCII.GetString(value)) : null;
+            var customerInformation = SessionService.GetCustomerInformation();
 
-            if (customerIntel is null)
+            return customerInformation is null ? null : new Response
             {
-                return null;
-            }
-
-            return new Response
-            {
-                FirstName = customerIntel.FirstName,
-                LastName = customerIntel.LastName,
-                Email = customerIntel.Email,
-                PhoneNumber = customerIntel.PhoneNumber,
-                Address = customerIntel.Address,
-                Address2 = customerIntel.Address2,
-                City = customerIntel.City,
-                PostCode = customerIntel.PostCode
+                FirstName = customerInformation.FirstName,
+                LastName = customerInformation.LastName,
+                Email = customerInformation.Email,
+                PhoneNumber = customerInformation.PhoneNumber,
+                Address = customerInformation.Address,
+                Address2 = customerInformation.Address2,
+                City = customerInformation.City,
+                PostCode = customerInformation.PostCode
             };
         }
 

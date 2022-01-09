@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shop.Application.User.Cart;
+using System.Collections.Generic;
 
 namespace Shop.UI.Pages
 {

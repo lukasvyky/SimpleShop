@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shop.Application.User.Cart;
 using Shop.Application.User.Products;
+using System.Threading.Tasks;
 
 namespace Shop.UI.Pages
 {
@@ -19,11 +20,9 @@ namespace Shop.UI.Pages
             {
                 return RedirectToPage("Index");
             }
-            else
-            {
-                Product = incomingProduct;
-                return Page();
-            }
+
+            Product = incomingProduct;
+            return Page();
         }
 
         public async Task<IActionResult> OnPost([FromServices] AddToCart addToCart)

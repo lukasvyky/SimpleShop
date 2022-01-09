@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+using System;
 
 namespace Shop.Database.Migrations
 {
