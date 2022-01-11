@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Shop.Domain.Enums;
 using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Shop.Database.Migrations
+namespace Shop.Database
 {
     public class OrderService : IOrderService
     {
@@ -18,7 +18,7 @@ namespace Shop.Database.Migrations
             Context = context;
         }
 
-        public Task AdvanceOrder(int id)
+        public Task<int> AdvanceOrder(int id)
         {
             var order = Context.Orders.FirstOrDefault(o => o.Id == id).OrderStatus++;
 
@@ -39,7 +39,7 @@ namespace Shop.Database.Migrations
 
         public TResult GetOrderById<TResult>(int id, Func<Order, TResult> selector)
         {
-           return GetOrder(o => o.Id == id, selector);
+            return GetOrder(o => o.Id == id, selector);
         }
 
         public IEnumerable<TResult> GetOrdersByStatus<TResult>(OrderStatus status, Func<Order, TResult> selector)
@@ -54,12 +54,12 @@ namespace Shop.Database.Migrations
 
         private TResult GetOrder<TResult>(Func<Order, bool> condition, Func<Order, TResult> selector)
         {
-             return Context.Orders.Where(o => condition(o))
-                .Include(o => o.OrderStocks)
-                .ThenInclude(os => os.Stock)
-                .ThenInclude(s => s.Product)
-                .Select(selector)
-                .FirstOrDefault();
+            return Context.Orders.Where(o => condition(o))
+               .Include(o => o.OrderStocks)
+               .ThenInclude(os => os.Stock)
+               .ThenInclude(s => s.Product)
+               .Select(selector)
+               .FirstOrDefault();
         }
     }
 }

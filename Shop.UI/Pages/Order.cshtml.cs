@@ -1,21 +1,16 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shop.Application.User.Orders;
-using Shop.Database;
 
 namespace Shop.UI.Pages
 {
     public class OrderModel : PageModel
     {
         public GetOrder.Response Order { get; set; }
-        private ApplicationDbContext Context { get; }
 
-        public OrderModel(ApplicationDbContext context)
+        public void OnGet([FromServices] GetOrder getOrder, string reference)
         {
-            Context = context;
-        }
-        public void OnGet(string reference)
-        {
-            Order = new GetOrder(Context).Do(reference);
+            Order = getOrder.Do(reference);
         }
     }
 }

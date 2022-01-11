@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Application.User.Cart;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Shop.UI.Controllers

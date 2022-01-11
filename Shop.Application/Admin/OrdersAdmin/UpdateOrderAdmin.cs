@@ -11,7 +11,7 @@ namespace Shop.Application.Admin.OrdersAdmin
             OrderService = orderService;
         }
 
-        public Task Do(int id)
+        public Task<int> Do(int id)
         {
             return OrderService.AdvanceOrder(id);
         }

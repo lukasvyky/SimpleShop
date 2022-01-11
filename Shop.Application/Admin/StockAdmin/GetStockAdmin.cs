@@ -1,35 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.StockAdmin
 {
     public class GetStockAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public GetStockAdmin(ApplicationDbContext context)
+        private IProductService ProductService { get; }
+        public GetStockAdmin(IProductService productService)
         {
-            Context = context;
+            ProductService = productService;
         }
 
         public IEnumerable<ProductViewModel> Do()
         {
-            var stock = Context.Products
-                .Include(p => p.Stock)
-                .Select(p => new ProductViewModel
+            return ProductService.GetProductsWithStock(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Stock = p.Stock.Select(x => new StockViewModel
                 {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Stock = p.Stock.Select(x => new StockViewModel
-                    {
-                        Id = x.Id,
-                        Description = x.Description,
-                        Qty = x.Qty
-                    })
+                    Id = x.Id,
+                    Description = x.Description,
+                    Qty = x.Qty
                 })
-                .ToList();
-
-            return stock;
+            });
         }
 
         public class StockViewModel

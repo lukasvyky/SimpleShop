@@ -1,22 +1,19 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.StockAdmin
 {
     public class DeleteStockAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public DeleteStockAdmin(ApplicationDbContext context)
+        private IStockService StockService { get; }
+
+        public DeleteStockAdmin(IStockService stockService)
         {
-            Context = context;
+            StockService = stockService;
         }
 
-        public async Task<bool> Do(int id)
+        public Task<int> Do(int id)
         {
-            var stockToRemove = Context.Stocks.Find(id);
-            Context.Stocks.Remove(stockToRemove);
-            await Context.SaveChangesAsync();
-
-            return true;
+            return StockService.DeleteStock(id);
         }
     }
 }

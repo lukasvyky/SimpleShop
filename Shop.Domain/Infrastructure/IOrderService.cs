@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Shop.Domain.Enums;
+using Shop.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Shop.Domain.Enums;
-using Shop.Domain.Models;
 
 namespace Shop.Domain.Infrastructure
 {
@@ -13,6 +13,6 @@ namespace Shop.Domain.Infrastructure
         TResult GetOrderByReference<TResult>(string reference, Func<Order, TResult> selector);
         TResult GetOrderById<TResult>(int id, Func<Order, TResult> selector);
         IEnumerable<TResult> GetOrdersByStatus<TResult>(OrderStatus status, Func<Order, TResult> selector);
-        Task AdvanceOrder(int id);
+        Task<int> AdvanceOrder(int id);
     }
 }

@@ -1,24 +1,26 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.ProductsAdmin
 {
-    public class UpdateProductsAdmin
+    public class UpdateProductAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public UpdateProductsAdmin(ApplicationDbContext context)
+        private IProductService ProductService { get; }
+
+        public UpdateProductAdmin(IProductService productService)
         {
-            Context = context;
+            ProductService = productService;
         }
 
         public async Task<Response> Do(Request request)
         {
-            var product = Context.Products.Find(request.Id);
+            var product = ProductService.GetProductById(request.Id, s => s);
 
             product.Name = request.Name;
             product.Description = request.Description;
             product.Value = request.Value;
 
-            await Context.SaveChangesAsync();
+            await ProductService.UpdateProduct(product);
+
             return new Response
             {
                 Id = product.Id,

@@ -2,12 +2,12 @@
 using Shop.Application.Admin.ProductsAdmin;
 using Shop.Application.Admin.StockAdmin;
 using Shop.Application.Admin.UsersAdmin;
-using Shop.Domain.Infrastructure;
 using Shop.Application.User.Cart;
 using Shop.Application.User.Orders;
 using Shop.Application.User.Products;
-using Shop.UI.Infrastructure;
 using Shop.Database;
+using Shop.Domain.Infrastructure;
+using Shop.UI.Infrastructure;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -37,7 +37,6 @@ namespace Microsoft.Extensions.DependencyInjection
             @this.AddTransient<CreateOrder>();
             @this.AddTransient<GetOrder>();
 
-            @this.AddTransient<CreateProduct>();
             @this.AddTransient<GetProduct>();
             @this.AddTransient<GetProducts>();
         }
@@ -54,7 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
             @this.AddTransient<DeleteProductAdmin>();
             @this.AddTransient<GetProductAdmin>();
             @this.AddTransient<GetProductsAdmin>();
-            @this.AddTransient<UpdateProductsAdmin>();
+            @this.AddTransient<UpdateProductAdmin>();
 
             @this.AddTransient<CreateStockAdmin>();
             @this.AddTransient<DeleteStockAdmin>();

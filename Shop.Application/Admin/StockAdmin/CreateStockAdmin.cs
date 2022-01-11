@@ -1,14 +1,15 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 
 namespace Shop.Application.Admin.StockAdmin
 {
     public class CreateStockAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public CreateStockAdmin(ApplicationDbContext context)
+        private IStockService StockService { get; }
+
+        public CreateStockAdmin(IStockService stockService)
         {
-            Context = context;
+            StockService = stockService;
         }
 
         public async Task<Response> Do(Request request)
@@ -20,8 +21,7 @@ namespace Shop.Application.Admin.StockAdmin
                 Qty = request.Qty
             };
 
-            Context.Stocks.Add(stockToSave);
-            await Context.SaveChangesAsync();
+            await StockService.CreateStock(stockToSave);
 
             return new Response
             {

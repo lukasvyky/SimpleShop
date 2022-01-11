@@ -1,24 +1,24 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.ProductsAdmin
 {
     public class GetProductAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public GetProductAdmin(ApplicationDbContext context)
+        private IProductService ProductService { get; }
+
+        public GetProductAdmin(IProductService productService)
         {
-            Context = context;
+            ProductService = productService;
         }
 
         public ProductViewModel Do(int id) =>
-            Context.Products.Where(p => p.Id == id).Select(p => new ProductViewModel
+            ProductService.GetProductById(id, p => new ProductViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
                 Value = p.Value
-            })
-            .FirstOrDefault();
+            });
 
         public class ProductViewModel
         {

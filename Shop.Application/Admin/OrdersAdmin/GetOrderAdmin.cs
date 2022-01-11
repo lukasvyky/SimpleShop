@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shop.Database;
-using Shop.Domain.Infrastructure;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.OrdersAdmin
 {

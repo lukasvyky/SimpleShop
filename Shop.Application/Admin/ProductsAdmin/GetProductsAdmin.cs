@@ -1,22 +1,24 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.ProductsAdmin
 {
     public class GetProductsAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public GetProductsAdmin(ApplicationDbContext context)
+        private IProductService ProductService { get; }
+
+        public GetProductsAdmin(IProductService productService)
         {
-            Context = context;
+            ProductService = productService;
         }
 
         public IEnumerable<ProductViewModel> Do() =>
-            Context.Products.ToList().Select(p => new ProductViewModel
+            ProductService.GetProductsWithStock(p => new ProductViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Value = p.Value
             });
+
         public class ProductViewModel
         {
             public int Id { get; set; }

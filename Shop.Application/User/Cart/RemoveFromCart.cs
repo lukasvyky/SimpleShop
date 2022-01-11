@@ -12,7 +12,7 @@ namespace Shop.Application.User.Cart
             SessionService = sessionService;
             StockService = stockService;
         }
-       
+
         public async Task<bool> Do(Request request)
         {
             if (request.Qty <= 0)

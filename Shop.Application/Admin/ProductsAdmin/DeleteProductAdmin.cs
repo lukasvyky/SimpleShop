@@ -1,22 +1,19 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.ProductsAdmin
 {
     public class DeleteProductAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public DeleteProductAdmin(ApplicationDbContext context)
+        private IProductService ProductService { get; }
+
+        public DeleteProductAdmin(IProductService productService)
         {
-            Context = context;
+            ProductService = productService;
         }
 
-        public async Task<bool> Do(int id)
+        public Task<int> Do(int id)
         {
-            var productToDelete = Context.Products.Find(id);
-            Context.Products.Remove(productToDelete);
-            await Context.SaveChangesAsync();
-
-            return true;
+            return ProductService.DeleteProduct(id);
         }
     }
 }

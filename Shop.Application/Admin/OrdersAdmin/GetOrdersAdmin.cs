@@ -15,7 +15,7 @@ namespace Shop.Application.Admin.OrdersAdmin
 
         public IEnumerable<Response> Do(int status)
         {
-            return OrderService.GetOrdersByStatus((OrderStatus) status, o => new Response()
+            return OrderService.GetOrdersByStatus((OrderStatus)status, o => new Response()
             {
                 Id = o.Id,
                 OrderRef = o.OrderRef,

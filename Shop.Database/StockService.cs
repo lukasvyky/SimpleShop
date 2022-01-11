@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shop.Database
 {
@@ -13,6 +14,30 @@ namespace Shop.Database
         public StockService(ApplicationDbContext context)
         {
             Context = context;
+        }
+
+        public Task<int> CreateStock(Stock stock)
+        {
+            Context.Stocks.Add(stock);
+            return Context.SaveChangesAsync();
+        }
+
+        public Task<int> UpdateStockRange(IEnumerable<Stock> stocks)
+        {
+            Context.UpdateRange(stocks);
+            return Context.SaveChangesAsync();
+        }
+
+        public Task<int> UpdateStock(Stock stock)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> DeleteStock(int id)
+        {
+            var stockToRemove = Context.Stocks.Find(id);
+            Context.Stocks.Remove(stockToRemove);
+            return Context.SaveChangesAsync();
         }
 
         public Stock GetStockWithProduct(int stockId)
@@ -56,6 +81,26 @@ namespace Shop.Database
             Context.StockOnHold.RemoveRange(stockOnHold);
 
             return Context.SaveChangesAsync();
+        }
+
+        public Task RetrieveExpiredStockOnHold()
+        {
+            var stocksOnHold = Context.StockOnHold.Where(s => s.ExpiryDate < DateTime.Now).ToList();
+
+            if (stocksOnHold.Any())
+            {
+                var stockToReturn = Context.Stocks.AsEnumerable().Where(s => stocksOnHold.Any(sh => sh.StockId == s.Id));
+
+                foreach (var stock in stockToReturn)
+                {
+                    stock.Qty += stocksOnHold.FirstOrDefault(s => s.StockId == stock.Id).Qty;
+                }
+
+                Context.StockOnHold.RemoveRange(stocksOnHold);
+                return Context.SaveChangesAsync();
+            }
+
+            return Task.CompletedTask;
         }
 
         public Task RemoveStockFromHold(int stockId, int qty, string sessionId)

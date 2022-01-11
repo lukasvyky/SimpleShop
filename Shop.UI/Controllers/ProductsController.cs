@@ -27,7 +27,7 @@ namespace Shop.UI.Controllers
             => Ok(await deleteProduct.Do(id));
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProduct([FromServices] UpdateProductsAdmin updateProducts, [FromBody] UpdateProductsAdmin.Request request)
-            => Ok(await updateProducts.Do(request));
+        public async Task<IActionResult> UpdateProduct([FromServices] UpdateProductAdmin updateProduct, [FromBody] UpdateProductAdmin.Request request)
+            => Ok(await updateProduct.Do(request));
     }
 }

@@ -1,23 +1,24 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 
 namespace Shop.Application.Admin.StockAdmin
 {
     public class UpdateStockAdmin
     {
-        private ApplicationDbContext Context { get; }
-        public UpdateStockAdmin(ApplicationDbContext context)
+        private IStockService StockService { get; }
+
+        public UpdateStockAdmin(IStockService stockService)
         {
-            Context = context;
+            StockService = stockService;
         }
 
         public async Task<Response> Do(Request request)
         {
-            var stockList = new List<Stock>();
+            var stocks = new List<Stock>();
 
             foreach (var stock in request.Stock)
             {
-                stockList.Add(new Stock
+                stocks.Add(new Stock
                 {
                     Id = stock.Id,
                     Description = stock.Description,
@@ -26,8 +27,7 @@ namespace Shop.Application.Admin.StockAdmin
                 });
             }
 
-            Context.UpdateRange(stockList);
-            await Context.SaveChangesAsync();
+            await StockService.UpdateStockRange(stocks);
 
             return new Response
             {
