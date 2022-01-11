@@ -1,48 +1,42 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.User.Orders
 {
     public class GetOrder
     {
-        private ApplicationDbContext Context { get; }
+        private IOrderService OrderService { get; }
 
-        public GetOrder(ApplicationDbContext context)
+        public GetOrder(IOrderService orderService)
         {
-            Context = context;
+            OrderService = orderService;
         }
 
         public Response Do(string orderReference)
         {
-            return Context.Orders.Where(o => o.OrderRef.Equals(orderReference))
-                .Include(o => o.OrderStocks)
-                .ThenInclude(os => os.Stock)
-                .ThenInclude(s => s.Product)
-                .Select(o => new Response()
+            return OrderService.GetOrderByReference(orderReference, o => new Response
+            {
+                OrderRef = orderReference,
+
+                FirstName = o.FirstName,
+                LastName = o.LastName,
+                Email = o.Email,
+                PhoneNumber = o.PhoneNumber,
+                Address = o.Address,
+                Address2 = o.Address2,
+                City = o.City,
+                PostCode = o.PostCode,
+
+                Products = o.OrderStocks.Select(os => new Product()
                 {
-                    OrderRef = orderReference,
+                    Name = os.Stock.Product.Name,
+                    Description = os.Stock.Product.Description,
+                    Value = $"CZK {os.Stock.Product.Value.ToString("N2")}",
+                    Qty = os.Stock.Qty,
+                    StockDescription = os.Stock.Description
+                }),
 
-                    FirstName = o.FirstName,
-                    LastName = o.LastName,
-                    Email = o.Email,
-                    PhoneNumber = o.PhoneNumber,
-                    Address = o.Address,
-                    Address2 = o.Address2,
-                    City = o.City,
-                    PostCode = o.PostCode,
-
-                    Products = o.OrderStocks.Select(os => new Product()
-                    {
-                        Name = os.Stock.Product.Name,
-                        Description = os.Stock.Product.Description,
-                        Value = $"CZK {os.Stock.Product.Value.ToString("N2")}",
-                        Qty = os.Stock.Qty,
-                        StockDescription = os.Stock.Description
-                    }),
-
-                    TotalValue = o.OrderStocks.Sum(os => os.Stock.Product.Value).ToString("N2")
-                })
-                .FirstOrDefault();
+                TotalValue = o.OrderStocks.Sum(os => os.Stock.Product.Value).ToString("N2")
+            });
         }
         public class Response
         {

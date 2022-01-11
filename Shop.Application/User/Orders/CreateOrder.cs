@@ -1,22 +1,21 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 using Shop.Domain.Models;
 
 namespace Shop.Application.User.Orders
 {
     public class CreateOrder
     {
-        private ApplicationDbContext Context { get; }
+        private IOrderService OrderService { get; }
+        private IStockService StockService { get; }
 
-        public CreateOrder(ApplicationDbContext context)
+        public CreateOrder(IOrderService orderService, IStockService stockService)
         {
-            Context = context;
+            OrderService = orderService;
+            StockService = stockService;
         }
 
         public async Task<bool> Do(Request request)
         {
-            var stockOnHold = Context.StockOnHold.Where(s => s.SessionId == request.SessionId).ToList();
-            Context.StockOnHold.RemoveRange(stockOnHold);
-
             var order = new Order
             {
                 StripeReference = request.StripeReference,
@@ -38,10 +37,16 @@ namespace Shop.Application.User.Orders
                 }).ToList()
             };
 
-            Context.Orders.Add(order);
+            var isSuccess = await OrderService.CreateOrder(order) > 0;
 
+            if (!isSuccess)
+            {
+                return false;
+            }
 
-            return await Context.SaveChangesAsync() > 0;
+            await StockService.RemoveStockFromHold(request.SessionId);
+
+            return true;
         }
 
         public class Request
@@ -73,7 +78,7 @@ namespace Shop.Application.User.Orders
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var value = new string(Enumerable.Repeat(chars, 12).Select(s => s[new Random().Next(s.Length)]).ToArray());
-            return Context.Orders.Any(o => o.OrderRef.Equals(value)) ? CreateOrderReference() : value;
+            return OrderService.DoesOrderRefExist(value) ? CreateOrderReference() : value;
         }
     }
 }

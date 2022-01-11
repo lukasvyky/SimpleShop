@@ -1,26 +1,26 @@
-﻿using Shop.Database;
-using Shop.Domain.Enums;
+﻿using Shop.Domain.Enums;
+using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.OrdersAdmin
 {
     public class GetOrdersAdmin
     {
-        private ApplicationDbContext Context { get; }
+        private IOrderService OrderService { get; }
 
-        public GetOrdersAdmin(ApplicationDbContext context)
+
+        public GetOrdersAdmin(IOrderService orderService)
         {
-            Context = context;
+            OrderService = orderService;
         }
 
         public IEnumerable<Response> Do(int status)
         {
-            return Context.Orders.Where(o => o.OrderStatus == (OrderStatus)status)
-                .Select(o => new Response()
-                {
-                    Id = o.Id,
-                    OrderRef = o.OrderRef,
-                    Email = o.Email
-                });
+            return OrderService.GetOrdersByStatus((OrderStatus) status, o => new Response()
+            {
+                Id = o.Id,
+                OrderRef = o.OrderRef,
+                Email = o.Email
+            });
         }
         public class Response
         {

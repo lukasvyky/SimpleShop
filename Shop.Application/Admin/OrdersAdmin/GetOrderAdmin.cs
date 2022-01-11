@@ -1,49 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Database;
+using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.OrdersAdmin
 {
     public class GetOrderAdmin
     {
-        private ApplicationDbContext Context { get; }
+        private IOrderService OrderService { get; }
 
-        public GetOrderAdmin(ApplicationDbContext context)
+        public GetOrderAdmin(IOrderService orderService)
         {
-            Context = context;
+            OrderService = orderService;
         }
 
         public Response Do(int id)
         {
-            return Context.Orders
-                .Where(o => o.Id == id)
-                .Include(o => o.OrderStocks)
-                .ThenInclude(os => os.Stock)
-                .ThenInclude(s => s.Product)
-                .Select(o => new Response
+            return OrderService.GetOrderById(id, o => new Response
+            {
+                Id = o.Id,
+                StripeReference = o.StripeReference,
+                OrderRef = o.OrderRef,
+
+                FirstName = o.FirstName,
+                LastName = o.LastName,
+                Email = o.Email,
+                PhoneNumber = o.PhoneNumber,
+                Address = o.Address,
+                Address2 = o.Address2,
+                City = o.City,
+                PostCode = o.PostCode,
+
+                Products = o.OrderStocks.Select(os => new Product()
                 {
-                    Id = o.Id,
-                    StripeReference = o.StripeReference,
-                    OrderRef = o.OrderRef,
-
-                    FirstName = o.FirstName,
-                    LastName = o.LastName,
-                    Email = o.Email,
-                    PhoneNumber = o.PhoneNumber,
-                    Address = o.Address,
-                    Address2 = o.Address2,
-                    City = o.City,
-                    PostCode = o.PostCode,
-
-                    Products = o.OrderStocks.Select(os => new Product()
-                    {
-                        Name = os.Stock.Product.Name,
-                        Description = os.Stock.Product.Description,
-                        Qty = os.Stock.Qty,
-                        StockDescription = os.Stock.Description
-                    })
+                    Name = os.Stock.Product.Name,
+                    Description = os.Stock.Product.Description,
+                    Qty = os.Stock.Qty,
+                    StockDescription = os.Stock.Description
                 })
-                .FirstOrDefault();
+            });
         }
+
         public class Response
         {
             public int Id { get; set; }

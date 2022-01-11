@@ -1,23 +1,19 @@
-﻿using Shop.Database;
+﻿using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.OrdersAdmin
 {
     public class UpdateOrderAdmin
     {
-        private ApplicationDbContext Context { get; }
+        private IOrderService OrderService { get; }
 
-        public UpdateOrderAdmin(ApplicationDbContext context)
+        public UpdateOrderAdmin(IOrderService orderService)
         {
-            Context = context;
+            OrderService = orderService;
         }
 
-        public async Task<bool> Do(int id)
+        public Task Do(int id)
         {
-            var order = Context.Orders.FirstOrDefault(o => o.Id == id);
-
-            order.OrderStatus += 1;
-
-            return await Context.SaveChangesAsync() > 0;
+            return OrderService.AdvanceOrder(id);
         }
     }
 }

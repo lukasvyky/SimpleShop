@@ -50,6 +50,13 @@ namespace Shop.Database
 
             return Context.SaveChangesAsync();
         }
+        public Task RemoveStockFromHold(string sessionId)
+        {
+            var stockOnHold = Context.StockOnHold.Where(s => s.SessionId == sessionId).ToList();
+            Context.StockOnHold.RemoveRange(stockOnHold);
+
+            return Context.SaveChangesAsync();
+        }
 
         public Task RemoveStockFromHold(int stockId, int qty, string sessionId)
         {

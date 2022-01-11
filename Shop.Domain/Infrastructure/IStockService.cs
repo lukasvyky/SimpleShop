@@ -9,5 +9,6 @@ namespace Shop.Domain.Infrastructure
         bool IsThereEnoughStock(int stockId, int qty);
         Task PutStockOnHold(int stockId, int qty, string sessionId);
         Task RemoveStockFromHold(int stockId, int qty, string sessionId);
+        Task RemoveStockFromHold(string sessionId);
     }
 }
