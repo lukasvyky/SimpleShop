@@ -12,6 +12,8 @@ namespace Shop.UI.Infrastructure
     public class SessionService : ISessionService
     {
         private ISession Session { get; }
+        private const string keyCart = "Cart";
+        private const string keyCustomerInfo = "customer-information";
 
         public SessionService(IHttpContextAccessor httpContextAccessor)
         {
@@ -22,7 +24,7 @@ namespace Shop.UI.Infrastructure
 
         public void AddProduct(CartProduct cartProduct)
         {
-            var hasCookieValue = Session.TryGetValue("cart", out byte[] value);
+            var hasCookieValue = Session.TryGetValue(keyCart, out byte[] value);
             var cartItems = new List<CartProduct>();
 
             if (hasCookieValue)
@@ -41,12 +43,12 @@ namespace Shop.UI.Infrastructure
 
             var stringObject = JsonSerializer.Serialize(cartItems);
 
-            Session.Set("cart", Encoding.UTF8.GetBytes(stringObject));
+            Session.Set(keyCart, Encoding.UTF8.GetBytes(stringObject));
         }
 
         public void RemoveProduct(int stockId, int qty)
         {
-            var doesCartExist = Session.TryGetValue("cart", out byte[] value);
+            var doesCartExist = Session.TryGetValue(keyCart, out byte[] value);
             var cartItems = doesCartExist
                 ? JsonSerializer.Deserialize<List<CartProduct>>(Encoding.ASCII.GetString(value))
                 : new List<CartProduct>();
@@ -63,12 +65,12 @@ namespace Shop.UI.Infrastructure
 
             var itemsToCart = JsonSerializer.Serialize(cartItems);
 
-            Session.Set("cart", Encoding.UTF8.GetBytes(itemsToCart));
+            Session.Set(keyCart, Encoding.UTF8.GetBytes(itemsToCart));
         }
 
         public IEnumerable<TResult> GetCart<TResult>(Func<CartProduct, TResult> selector)
         {
-            var hasCookieValue = Session.TryGetValue("cart", out var value);
+            var hasCookieValue = Session.TryGetValue(keyCart, out var value);
 
             if (!hasCookieValue)
             {
@@ -80,16 +82,21 @@ namespace Shop.UI.Infrastructure
             return cartItems.Select(selector);
         }
 
+        public void ClearCart()
+        {
+            Session.Remove(keyCart);
+        }
+
         public void AddCustomerInformation(CustomerInformation customer)
         {
             var customerAsText = JsonSerializer.Serialize(customer);
 
-            Session.Set("customer-information", Encoding.UTF8.GetBytes(customerAsText));
+            Session.Set(keyCustomerInfo, Encoding.UTF8.GetBytes(customerAsText));
         }
 
         public CustomerInformation GetCustomerInformation()
         {
-            var hasCookieValue = Session.TryGetValue("customer-information", out byte[] value);
+            var hasCookieValue = Session.TryGetValue(keyCustomerInfo, out byte[] value);
             return hasCookieValue
                 ? JsonSerializer.Deserialize<CustomerInformation>(Encoding.ASCII.GetString(value))
                 : null;

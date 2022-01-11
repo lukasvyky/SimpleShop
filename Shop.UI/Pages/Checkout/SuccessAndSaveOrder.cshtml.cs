@@ -6,6 +6,7 @@ using Shop.Application.User.Orders;
 using Stripe;
 using System.Linq;
 using System.Threading.Tasks;
+using Shop.Domain.Infrastructure;
 
 namespace Shop.UI.Pages.Checkout
 {
@@ -15,7 +16,8 @@ namespace Shop.UI.Pages.Checkout
             [FromQuery(Name = "payment_intent")] string paymentIntentId,
             [FromServices] GetCartOrder getCartOrder,
             [FromServices] CreateOrder createOrder,
-            [FromServices] IConfiguration config
+            [FromServices] IConfiguration config,
+            [FromServices] ISessionService sessionService
             )
         {
             StripeConfiguration.ApiKey = config.GetSection("Stripe")["SecretKey"];
@@ -23,7 +25,7 @@ namespace Shop.UI.Pages.Checkout
 
             var paymentIntent = await new PaymentIntentService().GetAsync(paymentIntentId);
 
-            await createOrder.Do(new CreateOrder.Request
+            var isSuccess = await createOrder.Do(new CreateOrder.Request
             {
                 StripeReference = paymentIntent.Charges.FirstOrDefault()?.Id,
                 SessionId = HttpContext.Session.Id,
@@ -43,6 +45,11 @@ namespace Shop.UI.Pages.Checkout
                     Qty = p.Qty
                 }).ToList()
             });
+
+            if (isSuccess)
+            {
+                sessionService.ClearCart();
+            }
         }
     }
 }
