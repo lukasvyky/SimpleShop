@@ -2,6 +2,7 @@
 
 namespace Shop.Application.Admin.StockAdmin
 {
+    [Service]
     public class DeleteStockAdmin
     {
         private IStockService StockService { get; }

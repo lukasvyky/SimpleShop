@@ -3,6 +3,7 @@ using Shop.Domain.Infrastructure;
 
 namespace Shop.Application.Admin.OrdersAdmin
 {
+    [Service]
     public class GetOrdersAdmin
     {
         private IOrderService OrderService { get; }

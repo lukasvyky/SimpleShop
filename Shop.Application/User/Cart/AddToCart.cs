@@ -3,6 +3,7 @@ using Shop.Domain.Models;
 
 namespace Shop.Application.User.Cart
 {
+    [Service]
     public class AddToCart
     {
         private ISessionService SessionService { get; }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Shop.Application.User.Cart
 {
+    [Service]
     public class AddCustomerInformation
     {
         private ISessionService SessionService { get; }

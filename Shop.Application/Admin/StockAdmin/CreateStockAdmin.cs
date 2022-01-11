@@ -3,6 +3,7 @@ using Shop.Domain.Models;
 
 namespace Shop.Application.Admin.StockAdmin
 {
+    [Service]
     public class CreateStockAdmin
     {
         private IStockService StockService { get; }

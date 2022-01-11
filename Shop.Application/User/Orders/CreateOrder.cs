@@ -3,6 +3,7 @@ using Shop.Domain.Models;
 
 namespace Shop.Application.User.Orders
 {
+    [Service]
     public class CreateOrder
     {
         private IOrderService OrderService { get; }

@@ -2,6 +2,7 @@
 
 namespace Shop.Application.Admin.OrdersAdmin
 {
+    [Service]
     public class GetOrderAdmin
     {
         private IOrderService OrderService { get; }

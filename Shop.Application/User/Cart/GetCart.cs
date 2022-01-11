@@ -2,6 +2,7 @@
 
 namespace Shop.Application.User.Cart
 {
+    [Service]
     public class GetCart
     {
         private ISessionService SessionService { get; }

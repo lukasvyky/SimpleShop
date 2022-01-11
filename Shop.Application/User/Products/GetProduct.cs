@@ -2,6 +2,7 @@
 
 namespace Shop.Application.User.Products
 {
+    [Service]
     public class GetProduct
     {
         private IStockService StockService { get; }

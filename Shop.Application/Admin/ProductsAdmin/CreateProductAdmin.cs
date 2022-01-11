@@ -3,6 +3,7 @@ using Shop.Domain.Models;
 
 namespace Shop.Application.Admin.ProductsAdmin
 {
+    [Service]
     public class CreateProductAdmin
     {
         private IProductService ProductService { get; }

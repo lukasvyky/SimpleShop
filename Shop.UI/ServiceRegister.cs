@@ -1,13 +1,9 @@
-﻿using Shop.Application.Admin.OrdersAdmin;
-using Shop.Application.Admin.ProductsAdmin;
-using Shop.Application.Admin.StockAdmin;
-using Shop.Application.Admin.UsersAdmin;
-using Shop.Application.User.Cart;
-using Shop.Application.User.Orders;
-using Shop.Application.User.Products;
+﻿using Shop.Application;
 using Shop.Database;
 using Shop.Domain.Infrastructure;
 using Shop.UI.Infrastructure;
+using System.Linq;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -15,50 +11,23 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection @this)
         {
+            var serviceType = typeof(Service);
+            var definedTypes = serviceType.Assembly.DefinedTypes;
+            var services = definedTypes.Where(t => t.GetTypeInfo().GetCustomAttribute<Service>() is not null);
+
+            foreach (var type in services)
+            {
+                @this.AddTransient(type);
+            }
+
             @this.AddScoped<ISessionService, SessionService>();
+            @this.AddTransient<IProductService, ProductService>();
             @this.AddTransient<IStockService, StockService>();
+            @this.AddTransient<IOrderService, OrderService>();
+
             @this.AddHttpContextAccessor();
 
-            RegisterAdminServices(@this);
-            RegisterUserServices(@this);
-
             return @this;
-        }
-
-        private static void RegisterUserServices(IServiceCollection @this)
-        {
-            @this.AddTransient<AddCustomerInformation>();
-            @this.AddTransient<AddToCart>();
-            @this.AddTransient<GetCart>();
-            @this.AddTransient<GetCustomerInformation>();
-            @this.AddTransient<GetCartOrder>();
-            @this.AddTransient<RemoveFromCart>();
-
-            @this.AddTransient<CreateOrder>();
-            @this.AddTransient<GetOrder>();
-
-            @this.AddTransient<GetProduct>();
-            @this.AddTransient<GetProducts>();
-        }
-
-        private static void RegisterAdminServices(IServiceCollection @this)
-        {
-            @this.AddTransient<CreateUserAdmin>();
-
-            @this.AddTransient<GetOrderAdmin>();
-            @this.AddTransient<GetOrdersAdmin>();
-            @this.AddTransient<UpdateOrderAdmin>();
-
-            @this.AddTransient<CreateProductAdmin>();
-            @this.AddTransient<DeleteProductAdmin>();
-            @this.AddTransient<GetProductAdmin>();
-            @this.AddTransient<GetProductsAdmin>();
-            @this.AddTransient<UpdateProductAdmin>();
-
-            @this.AddTransient<CreateStockAdmin>();
-            @this.AddTransient<DeleteStockAdmin>();
-            @this.AddTransient<GetStockAdmin>();
-            @this.AddTransient<UpdateStockAdmin>();
         }
     }
 }

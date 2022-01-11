@@ -2,6 +2,7 @@
 
 namespace Shop.Application.User.Orders
 {
+    [Service]
     public class GetOrder
     {
         private IOrderService OrderService { get; }

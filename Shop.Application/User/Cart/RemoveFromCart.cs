@@ -2,6 +2,7 @@
 
 namespace Shop.Application.User.Cart
 {
+    [Service]
     public class RemoveFromCart
     {
         private ISessionService SessionService { get; }
